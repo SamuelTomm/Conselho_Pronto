@@ -5,34 +5,14 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Textarea } from "@/components/ui/textarea"
-import {
-  Plus,
-  MoreHorizontal,
-  Edit,
-  Trash2,
   User,
   LogOut,
   Settings,
-  ChevronLeft,
-  ChevronRight,
   School,
   Users,
   BookOpen,
@@ -45,6 +25,7 @@ import {
   Clock,
   Calendar,
   ArrowLeft,
+  UserCheck,
 } from "lucide-react"
 
 // Dados simulados das disciplinas do professor
@@ -57,7 +38,7 @@ const disciplinasData = [
     turmas: ["3º A", "3º B"],
     cargaHoraria: 80,
     periodo: "2024/1",
-    alunos: 45,
+    totalAlunos: 45,
     descricao: "Funções, limites, derivadas e integrais",
     cor: "blue",
   },
@@ -69,7 +50,7 @@ const disciplinasData = [
     turmas: ["2º A"],
     cargaHoraria: 60,
     periodo: "2024/1",
-    alunos: 28,
+    totalAlunos: 28,
     descricao: "Eletromagnetismo e ondas",
     cor: "green",
   },
@@ -81,7 +62,7 @@ const disciplinasData = [
     turmas: ["1º TI", "2º TI"],
     cargaHoraria: 120,
     periodo: "2024/1",
-    alunos: 35,
+    totalAlunos: 35,
     descricao: "Lógica de programação e algoritmos",
     cor: "orange",
   },
@@ -93,7 +74,7 @@ const disciplinasData = [
     turmas: ["2º B"],
     cargaHoraria: 60,
     periodo: "2024/1",
-    alunos: 22,
+    totalAlunos: 22,
     descricao: "História dos séculos XIX e XX",
     cor: "purple",
   },
@@ -105,7 +86,7 @@ const disciplinasData = [
     turmas: ["1º DES"],
     cargaHoraria: 100,
     periodo: "2024/1",
-    alunos: 18,
+    totalAlunos: 18,
     descricao: "Fundamentos do design visual",
     cor: "pink",
   },
@@ -205,6 +186,7 @@ const menuItems = [
   { id: "alunos", label: "Alunos", icon: Users, active: false },
   { id: "disciplinas", label: "Disciplinas", icon: BookOpen, active: true },
   { id: "turmas", label: "Turmas", icon: Send, active: false },
+  { id: "professores", label: "Professores", icon: UserCheck, active: false },
 ]
 
 const coresDisciplina = [
@@ -312,7 +294,7 @@ export default function DisciplinasPage() {
         periodo: formData.periodo,
         descricao: formData.descricao,
         cor: formData.cor,
-        alunos: 0,
+        totalAlunos: 0,
       }
       setDisciplinas([...disciplinas, newDisciplina])
     }
@@ -382,18 +364,21 @@ export default function DisciplinasPage() {
     const alunosDisciplina = alunosPorDisciplina[selectedDisciplina.id as keyof typeof alunosPorDisciplina] || []
 
     return (
-      <div className="min-h-screen bg-gray-50 flex">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex">
         {/* Sidebar */}
         <div
-          className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-800 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out`}
+          className={`fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-blue-900 to-slate-800 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out shadow-2xl`}
           onMouseLeave={() => setSidebarOpen(false)}
         >
-          <div className="flex items-center justify-between h-16 px-6 border-b border-slate-700">
+          <div className="flex items-center justify-between h-16 px-6 border-b border-blue-800/30">
             <div className="flex items-center space-x-3">
-              <div className="bg-teal-500 p-2 rounded-lg">
-                <School className="h-5 w-5 text-white" />
+              <div className="bg-gradient-to-r from-blue-400 to-blue-600 p-2 rounded-xl shadow-lg">
+                <School className="h-6 w-6 text-white" />
               </div>
-              <span className="text-white font-semibold text-sm">Sistema Conselho</span>
+              <div>
+                <span className="text-white font-bold text-lg">Conselho Pronto</span>
+                <p className="text-blue-200 text-xs">Sistema de Gestão</p>
+              </div>
             </div>
           </div>
 
@@ -416,10 +401,18 @@ export default function DisciplinasPage() {
                           window.location.href = "/dashboard/cursos"
                         } else if (item.id === "alunos") {
                           window.location.href = "/dashboard/alunos"
+                        } else if (item.id === "disciplinas") {
+                          window.location.href = "/dashboard/disciplinas"
+                        } else if (item.id === "turmas") {
+                          window.location.href = "/dashboard/turmas"
+                        } else if (item.id === "professores") {
+                          window.location.href = "/dashboard/professores"
                         }
                       }}
-                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                        isActive ? "bg-slate-700 text-teal-400" : "text-gray-300 hover:bg-slate-700 hover:text-white"
+                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${
+                        isActive
+                          ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg transform scale-105"
+                          : "text-blue-100 hover:bg-blue-800/50 hover:text-white hover:transform hover:scale-105"
                       }`}
                     >
                       <Icon className="h-5 w-5" />
@@ -438,17 +431,24 @@ export default function DisciplinasPage() {
         {/* Main Content - Alunos da Disciplina */}
         <div className="flex-1 w-full">
           {/* Header */}
-          <header className="bg-white border-b border-gray-200">
+          <header className="bg-white/80 backdrop-blur-md border-b border-blue-100 sticky top-0 z-30">
             <div className="px-6 py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <Button variant="ghost" size="sm" onClick={() => setViewMode("list")}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setViewMode("list")}
+                    className="hover:bg-blue-50 transition-colors"
+                  >
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     Voltar
                   </Button>
                   <div>
-                    <h1 className="text-xl font-semibold text-gray-900">{selectedDisciplina.nome}</h1>
-                    <p className="text-sm text-gray-500">
+                    <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                      {selectedDisciplina.nome}
+                    </h1>
+                    <p className="text-sm text-slate-600">
                       {selectedDisciplina.codigo} - {selectedDisciplina.curso}
                     </p>
                   </div>
@@ -456,17 +456,21 @@ export default function DisciplinasPage() {
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="flex items-center space-x-2">
-                      <div className="bg-blue-100 p-2 rounded-full">
+                    <Button variant="ghost" className="flex items-center space-x-2 hover:bg-blue-50 transition-colors">
+                      <div className="bg-gradient-to-r from-blue-100 to-blue-200 p-2 rounded-full">
                         <User className="h-4 w-4 text-blue-600" />
                       </div>
-                      <span className="text-sm font-medium">Prof. Maria Silva</span>
+                      <span className="text-sm font-medium text-slate-700">Prof. Maria Silva</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48">
                     <DropdownMenuItem>
                       <Settings className="h-4 w-4 mr-2" />
                       Perfil
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => (window.location.href = "/dashboard/configuracoes")}>
+                      <Settings className="h-4 w-4 mr-2" />
+                      Configurações
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <LogOut className="h-4 w-4 mr-2" />
@@ -482,57 +486,65 @@ export default function DisciplinasPage() {
           <main className="p-6">
             {/* Info da Disciplina */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-              <Card>
+              <Card className="shadow-lg border-0 bg-white/90 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Total de Alunos</p>
-                      <p className="text-2xl font-bold text-gray-900">{alunosDisciplina.length}</p>
+                      <p className="text-sm font-medium text-slate-600">Total de Alunos</p>
+                      <p className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                        {alunosDisciplina.length}
+                      </p>
                     </div>
-                    <div className="bg-blue-100 p-3 rounded-full">
-                      <GraduationCap className="h-6 w-6 text-blue-600" />
+                    <div className="bg-gradient-to-r from-blue-100 to-blue-200 p-3 rounded-full">
+                      <GraduationCap className="h-6 w-6 text-blue-700" />
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="shadow-lg border-0 bg-white/90 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Carga Horária</p>
-                      <p className="text-2xl font-bold text-gray-900">{selectedDisciplina.cargaHoraria}h</p>
+                      <p className="text-sm font-medium text-slate-600">Carga Horária</p>
+                      <p className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                        {selectedDisciplina.cargaHoraria}h
+                      </p>
                     </div>
-                    <div className="bg-green-100 p-3 rounded-full">
-                      <Clock className="h-6 w-6 text-green-600" />
+                    <div className="bg-gradient-to-r from-slate-100 to-slate-200 p-3 rounded-full">
+                      <Clock className="h-6 w-6 text-slate-700" />
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="shadow-lg border-0 bg-white/90 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Turmas</p>
-                      <p className="text-2xl font-bold text-gray-900">{selectedDisciplina.turmas.length}</p>
+                      <p className="text-sm font-medium text-slate-600">Turmas</p>
+                      <p className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                        {selectedDisciplina.turmas.length}
+                      </p>
                     </div>
-                    <div className="bg-purple-100 p-3 rounded-full">
-                      <Users className="h-6 w-6 text-purple-600" />
+                    <div className="bg-gradient-to-r from-blue-100 to-blue-200 p-3 rounded-full">
+                      <Users className="h-6 w-6 text-blue-700" />
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="shadow-lg border-0 bg-white/90 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Período</p>
-                      <p className="text-2xl font-bold text-gray-900">{selectedDisciplina.periodo}</p>
+                      <p className="text-sm font-medium text-slate-600">Período</p>
+                      <p className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                        {selectedDisciplina.periodo}
+                      </p>
                     </div>
-                    <div className="bg-orange-100 p-3 rounded-full">
-                      <Calendar className="h-6 w-6 text-orange-600" />
+                    <div className="bg-gradient-to-r from-slate-100 to-slate-200 p-3 rounded-full">
+                      <Calendar className="h-6 w-6 text-slate-700" />
                     </div>
                   </div>
                 </CardContent>
@@ -540,27 +552,29 @@ export default function DisciplinasPage() {
             </div>
 
             {/* Tabela de Alunos */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Alunos da Disciplina</CardTitle>
-                <CardDescription>Lista de alunos matriculados em {selectedDisciplina.nome}</CardDescription>
+            <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm">
+              <CardHeader className="bg-gradient-to-r from-blue-50 to-slate-50 border-b border-blue-100">
+                <CardTitle className="text-slate-800">Alunos da Disciplina</CardTitle>
+                <CardDescription className="text-slate-600">
+                  Lista de alunos matriculados em {selectedDisciplina.nome}
+                </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="border rounded-lg">
+              <CardContent className="p-6">
+                <div className="border rounded-lg overflow-hidden shadow-sm bg-gradient-to-r from-slate-50 to-blue-50">
                   <Table>
                     <TableHeader>
-                      <TableRow>
-                        <TableHead>Aluno</TableHead>
-                        <TableHead>Matrícula</TableHead>
-                        <TableHead>Turma</TableHead>
-                        <TableHead>Média</TableHead>
-                        <TableHead>Frequência</TableHead>
-                        <TableHead>Status</TableHead>
+                      <TableRow className="bg-gradient-to-r from-blue-100 to-slate-100 border-b border-blue-200">
+                        <TableHead className="text-slate-700 font-semibold">Aluno</TableHead>
+                        <TableHead className="text-slate-700 font-semibold">Matrícula</TableHead>
+                        <TableHead className="text-slate-700 font-semibold">Turma</TableHead>
+                        <TableHead className="text-slate-700 font-semibold">Média</TableHead>
+                        <TableHead className="text-slate-700 font-semibold">Frequência</TableHead>
+                        <TableHead className="text-slate-700 font-semibold">Status</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {alunosDisciplina.map((aluno) => (
-                        <TableRow key={aluno.id}>
+                        <TableRow key={aluno.id} className="hover:bg-blue-50/50 transition-colors">
                           <TableCell>
                             <div className="flex items-center space-x-3">
                               <Avatar className="h-10 w-10">
@@ -574,14 +588,16 @@ export default function DisciplinasPage() {
                                 </AvatarFallback>
                               </Avatar>
                               <div>
-                                <div className="font-medium">{aluno.nome}</div>
+                                <div className="font-medium text-slate-800">{aluno.nome}</div>
                                 <div className="text-sm text-gray-500">{aluno.email}</div>
                               </div>
                             </div>
                           </TableCell>
-                          <TableCell className="font-medium">{aluno.matricula}</TableCell>
+                          <TableCell className="font-medium text-slate-700">{aluno.matricula}</TableCell>
                           <TableCell>
-                            <Badge variant="outline">{aluno.turma}</Badge>
+                            <Badge variant="outline" className="border-blue-200 text-blue-700">
+                              {aluno.turma}
+                            </Badge>
                           </TableCell>
                           <TableCell>
                             <div className="flex flex-col">
@@ -615,18 +631,21 @@ export default function DisciplinasPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-800 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-blue-900 to-slate-800 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out shadow-2xl`}
         onMouseLeave={() => setSidebarOpen(false)}
       >
-        <div className="flex items-center justify-between h-16 px-6 border-b border-slate-700">
+        <div className="flex items-center justify-between h-16 px-6 border-b border-blue-800/30">
           <div className="flex items-center space-x-3">
-            <div className="bg-teal-500 p-2 rounded-lg">
-              <School className="h-5 w-5 text-white" />
+            <div className="bg-gradient-to-r from-blue-400 to-blue-600 p-2 rounded-xl shadow-lg">
+              <School className="h-6 w-6 text-white" />
             </div>
-            <span className="text-white font-semibold text-sm">Sistema Conselho</span>
+            <div>
+              <span className="text-white font-bold text-lg">Conselho Pronto</span>
+              <p className="text-blue-200 text-xs">Sistema de Gestão</p>
+            </div>
           </div>
         </div>
 
@@ -649,10 +668,18 @@ export default function DisciplinasPage() {
                         window.location.href = "/dashboard/cursos"
                       } else if (item.id === "alunos") {
                         window.location.href = "/dashboard/alunos"
+                      } else if (item.id === "disciplinas") {
+                        window.location.href = "/dashboard/disciplinas"
+                      } else if (item.id === "turmas") {
+                        window.location.href = "/dashboard/turmas"
+                      } else if (item.id === "professores") {
+                        window.location.href = "/dashboard/professores"
                       }
                     }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      isActive ? "bg-slate-700 text-teal-400" : "text-gray-300 hover:bg-slate-700 hover:text-white"
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${
+                      isActive
+                        ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg transform scale-105"
+                        : "text-blue-100 hover:bg-blue-800/50 hover:text-white hover:transform hover:scale-105"
                     }`}
                   >
                     <Icon className="h-5 w-5" />
@@ -671,27 +698,33 @@ export default function DisciplinasPage() {
       {/* Main Content */}
       <div className="flex-1 w-full">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200">
+        <header className="bg-white/80 backdrop-blur-md border-b border-blue-100 sticky top-0 z-30">
           <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-xl font-semibold text-gray-900">Disciplinas</h1>
-                <p className="text-sm text-gray-500">Minhas Disciplinas - Prof. Maria Silva</p>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                  Disciplinas
+                </h1>
+                <p className="text-sm text-slate-600">Minhas Disciplinas - Prof. Maria Silva</p>
               </div>
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center space-x-2">
-                    <div className="bg-blue-100 p-2 rounded-full">
+                  <Button variant="ghost" className="flex items-center space-x-2 hover:bg-blue-50 transition-colors">
+                    <div className="bg-gradient-to-r from-blue-100 to-blue-200 p-2 rounded-full">
                       <User className="h-4 w-4 text-blue-600" />
                     </div>
-                    <span className="text-sm font-medium">Prof. Maria Silva</span>
+                    <span className="text-sm font-medium text-slate-700">Prof. Maria Silva</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem>
                     <Settings className="h-4 w-4 mr-2" />
                     Perfil
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => (window.location.href = "/dashboard/configuracoes")}>
+                    <Settings className="h-4 w-4 mr-2" />
+                    Configurações
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <LogOut className="h-4 w-4 mr-2" />
@@ -707,350 +740,124 @@ export default function DisciplinasPage() {
         <main className="p-6">
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <Card>
+            <Card className="shadow-lg border-0 bg-white/90 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Total de Disciplinas</p>
-                    <p className="text-2xl font-bold text-gray-900">{disciplinas.length}</p>
+                    <p className="text-sm font-medium text-slate-600">Total de Disciplinas</p>
+                    <p className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                      {disciplinas.length}
+                    </p>
                   </div>
-                  <div className="bg-blue-100 p-3 rounded-full">
-                    <BookOpen className="h-6 w-6 text-blue-600" />
+                  <div className="bg-gradient-to-r from-blue-100 to-blue-200 p-3 rounded-full">
+                    <BookOpen className="h-6 w-6 text-blue-700" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="shadow-lg border-0 bg-white/90 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Total de Alunos</p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {disciplinas.reduce((acc, d) => acc + d.alunos, 0)}
+                    <p className="text-sm font-medium text-slate-600">Alunos Total</p>
+                    <p className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                      {disciplinas.reduce((acc, disc) => acc + disc.totalAlunos, 0)}
                     </p>
                   </div>
-                  <div className="bg-green-100 p-3 rounded-full">
-                    <GraduationCap className="h-6 w-6 text-green-600" />
+                  <div className="bg-gradient-to-r from-slate-100 to-slate-200 p-3 rounded-full">
+                    <Users className="h-6 w-6 text-slate-700" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="shadow-lg border-0 bg-white/90 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Carga Horária Total</p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {disciplinas.reduce((acc, d) => acc + d.cargaHoraria, 0)}h
+                    <p className="text-sm font-medium text-slate-600">Carga Horária Total</p>
+                    <p className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                      {disciplinas.reduce((acc, disc) => acc + Number.parseInt(disc.cargaHoraria), 0)}h
                     </p>
                   </div>
-                  <div className="bg-purple-100 p-3 rounded-full">
-                    <Clock className="h-6 w-6 text-purple-600" />
+                  <div className="bg-gradient-to-r from-blue-100 to-blue-200 p-3 rounded-full">
+                    <Clock className="h-6 w-6 text-blue-700" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="shadow-lg border-0 bg-white/90 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Turmas</p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {new Set(disciplinas.flatMap((d) => d.turmas)).size}
+                    <p className="text-sm font-medium text-slate-600">Período Atual</p>
+                    <p className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                      2024/1
                     </p>
                   </div>
-                  <div className="bg-orange-100 p-3 rounded-full">
-                    <Users className="h-6 w-6 text-orange-600" />
+                  <div className="bg-gradient-to-r from-slate-100 to-slate-200 p-3 rounded-full">
+                    <Calendar className="h-6 w-6 text-slate-700" />
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>Minhas Disciplinas</CardTitle>
-                  <CardDescription>Gerencie suas disciplinas e visualize os alunos</CardDescription>
-                </div>
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button onClick={openNewDialog} className="bg-teal-600 hover:bg-teal-700">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Nova Disciplina
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle>{editingDisciplina ? "Editar Disciplina" : "Nova Disciplina"}</DialogTitle>
-                      <DialogDescription>
-                        {editingDisciplina
-                          ? "Edite as informações da disciplina."
-                          : "Adicione uma nova disciplina ao sistema."}
-                      </DialogDescription>
-                    </DialogHeader>
-                    <form onSubmit={handleSubmit}>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <Label htmlFor="codigo">Código</Label>
-                            <Input
-                              id="codigo"
-                              value={formData.codigo}
-                              onChange={(e) => setFormData({ ...formData, codigo: e.target.value })}
-                              placeholder="Ex: MAT301"
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="cor">Cor</Label>
-                            <Select
-                              value={formData.cor}
-                              onValueChange={(value) => setFormData({ ...formData, cor: value })}
-                            >
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {coresDisciplina.map((cor) => (
-                                  <SelectItem key={cor.value} value={cor.value}>
-                                    <div className="flex items-center space-x-2">
-                                      <div className={`w-3 h-3 rounded-full ${cor.class}`} />
-                                      <span>{cor.label}</span>
-                                    </div>
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-
-                        <div>
-                          <Label htmlFor="nome">Nome da Disciplina</Label>
-                          <Input
-                            id="nome"
-                            value={formData.nome}
-                            onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-                            placeholder="Ex: Matemática III"
-                          />
-                        </div>
-
-                        <div>
-                          <Label htmlFor="curso">Curso</Label>
-                          <Input
-                            id="curso"
-                            value={formData.curso}
-                            onChange={(e) => setFormData({ ...formData, curso: e.target.value })}
-                            placeholder="Ex: Formação Básica"
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <Label htmlFor="turmas">Turmas (separadas por vírgula)</Label>
-                            <Input
-                              id="turmas"
-                              value={formData.turmas}
-                              onChange={(e) => setFormData({ ...formData, turmas: e.target.value })}
-                              placeholder="Ex: 3º A, 3º B"
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="cargaHoraria">Carga Horária</Label>
-                            <Input
-                              id="cargaHoraria"
-                              type="number"
-                              value={formData.cargaHoraria}
-                              onChange={(e) => setFormData({ ...formData, cargaHoraria: e.target.value })}
-                              placeholder="Ex: 80"
-                            />
-                          </div>
-                        </div>
-
-                        <div>
-                          <Label htmlFor="periodo">Período</Label>
-                          <Select
-                            value={formData.periodo}
-                            onValueChange={(value) => setFormData({ ...formData, periodo: value })}
-                          >
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="2024/1">2024/1</SelectItem>
-                              <SelectItem value="2024/2">2024/2</SelectItem>
-                              <SelectItem value="2025/1">2025/1</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div>
-                          <Label htmlFor="descricao">Descrição</Label>
-                          <Textarea
-                            id="descricao"
-                            value={formData.descricao}
-                            onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
-                            placeholder="Descrição da disciplina..."
-                            rows={3}
-                          />
-                        </div>
+          {/* Disciplinas Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredData.map((disciplina) => (
+              <Card
+                key={disciplina.id}
+                className="shadow-lg border-0 bg-white/90 backdrop-blur-sm hover:shadow-xl transition-all duration-300"
+              >
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            coresDisciplina.find((c) => c.value === disciplina.cor)?.class ||
+                            "bg-blue-100 text-blue-800"
+                          }`}
+                        >
+                          {disciplina.codigo}
+                        </span>
                       </div>
-                      {error && (
-                        <Alert variant="destructive" className="mb-4">
-                          <AlertDescription>{error}</AlertDescription>
-                        </Alert>
-                      )}
-                      <DialogFooter>
-                        <Button type="submit">{editingDisciplina ? "Salvar" : "Adicionar"}</Button>
-                      </DialogFooter>
-                    </form>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {/* Filters */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm text-gray-600">Show</span>
-                    <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
-                      <SelectTrigger className="w-20">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="5">5</SelectItem>
-                        <SelectItem value="10">10</SelectItem>
-                        <SelectItem value="20">20</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <span className="text-sm text-gray-600">entries</span>
+                      <h3 className="font-semibold text-slate-800 mb-1">{disciplina.nome}</h3>
+                      <p className="text-sm text-slate-600 mb-2">{disciplina.curso}</p>
+                      <p className="text-xs text-slate-500">{disciplina.descricao}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-600">Search:</span>
-                  <Input
-                    placeholder="Buscar disciplina..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-64"
-                  />
-                </div>
-              </div>
 
-              {/* Table */}
-              <div className="border rounded-lg">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Disciplina</TableHead>
-                      <TableHead>Código</TableHead>
-                      <TableHead>Curso</TableHead>
-                      <TableHead>Turmas</TableHead>
-                      <TableHead>Alunos</TableHead>
-                      <TableHead>Carga Horária</TableHead>
-                      <TableHead className="w-20 text-center">Ações</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {paginatedData.map((disciplina) => (
-                      <TableRow key={disciplina.id}>
-                        <TableCell>
-                          <div className="flex flex-col">
-                            <span className="font-medium">{disciplina.nome}</span>
-                            {disciplina.descricao && (
-                              <span className="text-sm text-gray-500">{disciplina.descricao}</span>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell className="font-medium">{disciplina.codigo}</TableCell>
-                        <TableCell>
-                          <Badge className={getCorClass(disciplina.cor)}>{disciplina.curso}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex flex-wrap gap-1">
-                            {disciplina.turmas.map((turma, index) => (
-                              <Badge key={index} variant="outline" className="text-xs">
-                                {turma}
-                              </Badge>
-                            ))}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center space-x-1">
-                            <GraduationCap className="h-4 w-4 text-gray-400" />
-                            <span>{disciplina.alunos}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center space-x-1">
-                            <Clock className="h-4 w-4 text-gray-400" />
-                            <span>{disciplina.cargaHoraria}h</span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm">
-                                <MoreHorizontal className="h-4 w-4 text-blue-600" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => handleViewAlunos(disciplina)}>
-                                <Eye className="h-4 w-4 mr-2" />
-                                Ver Alunos
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleEdit(disciplina)}>
-                                <Edit className="h-4 w-4 mr-2" />
-                                Editar
-                              </DropdownMenuItem>
-                              <DropdownMenuItem className="text-red-600" onClick={() => handleDelete(disciplina.id)}>
-                                <Trash2 className="h-4 w-4 mr-2" />
-                                Excluir
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+                  <div className="flex items-center justify-between text-sm text-slate-600 mb-4">
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-1">
+                        <Users className="h-4 w-4" />
+                        <span>{disciplina.totalAlunos}</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Clock className="h-4 w-4" />
+                        <span>{disciplina.cargaHoraria}h</span>
+                      </div>
+                    </div>
+                  </div>
 
-              {/* Pagination */}
-              <div className="flex items-center justify-between mt-4">
-                <p className="text-sm text-gray-500">
-                  Showing {startIndex + 1} to{" "}
-                  {Math.min(startIndex + Number.parseInt(itemsPerPage), filteredData.length)} of {filteredData.length}{" "}
-                  entries
-                </p>
-                <div className="flex items-center space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                    disabled={currentPage === 1}
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <span className="text-sm font-medium">
-                    {currentPage} / {totalPages}
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                    disabled={currentPage === totalPages}
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                  <div className="flex space-x-2">
+                    <Button
+                      size="sm"
+                      onClick={() => handleViewAlunos(disciplina)}
+                      className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                    >
+                      <Eye className="h-4 w-4 mr-2" />
+                      Ver Alunos
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </main>
       </div>
     </div>

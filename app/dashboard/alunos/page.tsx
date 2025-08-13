@@ -47,6 +47,7 @@ import {
   MapPin,
   Calendar,
   FileBarChart,
+  X,
 } from "lucide-react"
 
 // Adicionar import do novo componente
@@ -475,19 +476,30 @@ export default function AlunosPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-800 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-blue-900 to-slate-800 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out shadow-xl`}
         onMouseLeave={() => setSidebarOpen(false)}
       >
-        <div className="flex items-center justify-between h-16 px-6 border-b border-slate-700">
+        <div className="flex items-center justify-between h-16 px-6 border-b border-blue-800">
           <div className="flex items-center space-x-3">
-            <div className="bg-teal-500 p-2 rounded-lg">
+            <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-2 rounded-lg shadow-md">
               <School className="h-5 w-5 text-white" />
             </div>
-            <span className="text-white font-semibold text-sm">Sistema Conselho</span>
+            <div>
+              <span className="text-white font-bold text-sm">Conselho Pronto</span>
+              <p className="text-blue-200 text-xs">Sistema de Gestão</p>
+            </div>
           </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="lg:hidden text-white hover:bg-blue-800"
+            onClick={() => setSidebarOpen(false)}
+          >
+            <X className="h-5 w-5" />
+          </Button>
         </div>
 
         <nav className="mt-8 px-4">
@@ -507,10 +519,18 @@ export default function AlunosPage() {
                         window.location.href = "/dashboard/ciclos"
                       } else if (item.id === "cursos") {
                         window.location.href = "/dashboard/cursos"
+                      } else if (item.id === "disciplinas") {
+                        window.location.href = "/dashboard/disciplinas"
+                      } else if (item.id === "turmas") {
+                        window.location.href = "/dashboard/turmas"
+                      } else if (item.id === "professores") {
+                        window.location.href = "/dashboard/professores"
                       }
                     }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      isActive ? "bg-slate-700 text-teal-400" : "text-gray-300 hover:bg-slate-700 hover:text-white"
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all duration-200 ${
+                      isActive
+                        ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md transform scale-105"
+                        : "text-blue-100 hover:bg-blue-800 hover:text-white hover:transform hover:scale-105"
                     }`}
                   >
                     <Icon className="h-5 w-5" />
@@ -523,33 +543,44 @@ export default function AlunosPage() {
         </nav>
       </div>
 
+      {/* Overlay for mobile */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
+
       {/* Área invisível para trigger da sidebar */}
       <div className="fixed left-0 top-0 w-5 h-full z-40 bg-transparent" onMouseEnter={() => setSidebarOpen(true)} />
 
       {/* Main Content */}
       <div className="flex-1 w-full">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200">
+        <header className="bg-white/80 backdrop-blur-sm border-b border-blue-100 shadow-sm">
           <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-xl font-semibold text-gray-900">Alunos</h1>
-                <p className="text-sm text-gray-500">Gestão de Alunos - Prof. Maria Silva</p>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-900 to-slate-700 bg-clip-text text-transparent">
+                  Alunos
+                </h1>
+                <p className="text-sm text-slate-600 font-medium">Conselho Pronto - Sistema de Gestão Educacional</p>
               </div>
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center space-x-2">
-                    <div className="bg-blue-100 p-2 rounded-full">
-                      <User className="h-4 w-4 text-blue-600" />
+                  <Button variant="ghost" className="flex items-center space-x-2 hover:bg-blue-50 transition-colors">
+                    <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-2 rounded-full shadow-md">
+                      <User className="h-4 w-4 text-white" />
                     </div>
-                    <span className="text-sm font-medium">Prof. Maria Silva</span>
+                    <span className="text-sm font-medium text-slate-700">Prof. Maria Silva</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem>
                     <Settings className="h-4 w-4 mr-2" />
                     Perfil
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => (window.location.href = "/dashboard/configuracoes")}>
+                    <Settings className="h-4 w-4 mr-2" />
+                    Configurações
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <LogOut className="h-4 w-4 mr-2" />
@@ -565,21 +596,21 @@ export default function AlunosPage() {
         <main className="p-6">
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <Card>
+            <Card className="hover:shadow-lg transition-shadow duration-200">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-gray-600">Total de Alunos</p>
                     <p className="text-2xl font-bold text-gray-900">{alunos.length}</p>
                   </div>
-                  <div className="bg-blue-100 p-3 rounded-full">
+                  <div className="bg-gradient-to-r from-blue-100 to-blue-200 p-3 rounded-full">
                     <GraduationCap className="h-6 w-6 text-blue-600" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="hover:shadow-lg transition-shadow duration-200">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -588,14 +619,14 @@ export default function AlunosPage() {
                       {alunos.filter((a) => a.status === "Ativo").length}
                     </p>
                   </div>
-                  <div className="bg-green-100 p-3 rounded-full">
+                  <div className="bg-gradient-to-r from-green-100 to-green-200 p-3 rounded-full">
                     <Users className="h-6 w-6 text-green-600" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="hover:shadow-lg transition-shadow duration-200">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -604,22 +635,22 @@ export default function AlunosPage() {
                       {alunos.filter((a) => a.curso.includes("Técnico")).length}
                     </p>
                   </div>
-                  <div className="bg-purple-100 p-3 rounded-full">
-                    <BookOpen className="h-6 w-6 text-purple-600" />
+                  <div className="bg-gradient-to-r from-slate-100 to-slate-200 p-3 rounded-full">
+                    <BookOpen className="h-6 w-6 text-slate-600" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="hover:shadow-lg transition-shadow duration-200">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-gray-600">Turmas</p>
                     <p className="text-2xl font-bold text-gray-900">{new Set(alunos.map((a) => a.turma)).size}</p>
                   </div>
-                  <div className="bg-orange-100 p-3 rounded-full">
-                    <School className="h-6 w-6 text-orange-600" />
+                  <div className="bg-gradient-to-r from-gray-100 to-gray-200 p-3 rounded-full">
+                    <School className="h-6 w-6 text-gray-600" />
                   </div>
                 </div>
               </CardContent>
@@ -635,7 +666,10 @@ export default function AlunosPage() {
                 </div>
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button onClick={openNewDialog} className="bg-teal-600 hover:bg-teal-700">
+                    <Button
+                      onClick={openNewDialog}
+                      className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+                    >
                       <Plus className="h-4 w-4 mr-2" />
                       Novo Aluno
                     </Button>

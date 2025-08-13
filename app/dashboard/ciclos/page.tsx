@@ -20,7 +20,26 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Plus, MoreHorizontal, Edit, Trash2, User, LogOut, Settings, ChevronLeft, ChevronRight, School, Users, BookOpen, Home, Circle, FileText, Send, Eye } from 'lucide-react'
+import {
+  Plus,
+  MoreHorizontal,
+  Edit,
+  Trash2,
+  User,
+  LogOut,
+  Settings,
+  ChevronLeft,
+  ChevronRight,
+  School,
+  Users,
+  BookOpen,
+  Home,
+  Circle,
+  FileText,
+  Send,
+  Eye,
+  UserCheck,
+} from "lucide-react"
 import { AnoTrimestersDialog } from "@/components/ano-trimesters-dialog" // Novo componente
 
 // Dados simulados dos anos
@@ -37,6 +56,7 @@ const menuItems = [
   { id: "alunos", label: "Alunos", icon: Users, active: false },
   { id: "disciplinas", label: "Disciplinas", icon: BookOpen, active: false },
   { id: "turmas", label: "Turmas", icon: Send, active: false },
+  { id: "professores", label: "Professores", icon: UserCheck, active: false },
 ]
 
 export default function AnosLetivosPage() {
@@ -71,8 +91,7 @@ export default function AnosLetivosPage() {
 
   const filteredData = anos.filter(
     (anoItem) =>
-      anoItem.ano.toString().includes(searchTerm) ||
-      anoItem.descricao.toLowerCase().includes(searchTerm.toLowerCase()),
+      anoItem.ano.toString().includes(searchTerm) || anoItem.descricao.toLowerCase().includes(searchTerm.toLowerCase()),
   )
 
   const totalPages = Math.ceil(filteredData.length / Number.parseInt(itemsPerPage))
@@ -97,9 +116,7 @@ export default function AnosLetivosPage() {
       // Editar ano existente
       setAnos(
         anos.map((anoItem) =>
-          anoItem.id === editingAno.id
-            ? { ...anoItem, ano: anoValue, descricao: formData.descricao }
-            : anoItem,
+          anoItem.id === editingAno.id ? { ...anoItem, ano: anoValue, descricao: formData.descricao } : anoItem,
         ),
       )
     } else {
@@ -140,18 +157,21 @@ export default function AnosLetivosPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-800 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-blue-900 to-slate-800 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out shadow-2xl`}
         onMouseLeave={() => setSidebarOpen(false)}
       >
-        <div className="flex items-center justify-between h-16 px-6 border-b border-slate-700">
+        <div className="flex items-center justify-between h-16 px-6 border-b border-blue-800/30">
           <div className="flex items-center space-x-3">
-            <div className="bg-teal-500 p-2 rounded-lg">
-              <School className="h-5 w-5 text-white" />
+            <div className="bg-gradient-to-r from-blue-400 to-blue-600 p-2 rounded-xl shadow-lg">
+              <School className="h-6 w-6 text-white" />
             </div>
-            <span className="text-white font-semibold text-sm">Sistema Conselho</span>
+            <div>
+              <span className="text-white font-bold text-lg">Conselho Pronto</span>
+              <p className="text-blue-200 text-xs">Sistema de Gestão</p>
+            </div>
           </div>
         </div>
 
@@ -176,10 +196,14 @@ export default function AnosLetivosPage() {
                         window.location.href = "/dashboard/disciplinas"
                       } else if (item.id === "turmas") {
                         window.location.href = "/dashboard/turmas"
+                      } else if (item.id === "professores") {
+                        window.location.href = "/dashboard/professores"
                       }
                     }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      isActive ? "bg-slate-700 text-teal-400" : "text-gray-300 hover:bg-slate-700 hover:text-white"
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${
+                      isActive
+                        ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg transform scale-105"
+                        : "text-blue-100 hover:bg-blue-800/50 hover:text-white hover:transform hover:scale-105"
                     }`}
                   >
                     <Icon className="h-5 w-5" />
@@ -198,27 +222,33 @@ export default function AnosLetivosPage() {
       {/* Main Content */}
       <div className="flex-1 w-full">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200">
+        <header className="bg-white/80 backdrop-blur-md border-b border-blue-100 sticky top-0 z-30">
           <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-xl font-semibold text-gray-900">Anos Letivos</h1>
-                <p className="text-sm text-gray-500">Gerencie os anos letivos do sistema</p>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                  Anos Letivos
+                </h1>
+                <p className="text-sm text-slate-600">Gerencie os anos letivos do sistema</p>
               </div>
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center space-x-2">
-                    <div className="bg-blue-100 p-2 rounded-full">
+                  <Button variant="ghost" className="flex items-center space-x-2 hover:bg-blue-50 transition-colors">
+                    <div className="bg-gradient-to-r from-blue-100 to-blue-200 p-2 rounded-full">
                       <User className="h-4 w-4 text-blue-600" />
                     </div>
-                    <span className="text-sm font-medium">Prof. Maria Silva</span>
+                    <span className="text-sm font-medium text-slate-700">Prof. Maria Silva</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem>
                     <Settings className="h-4 w-4 mr-2" />
                     Perfil
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => (window.location.href = "/dashboard/configuracoes")}>
+                    <Settings className="h-4 w-4 mr-2" />
+                    Configurações
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <LogOut className="h-4 w-4 mr-2" />
@@ -232,16 +262,19 @@ export default function AnosLetivosPage() {
 
         {/* Main Content */}
         <main className="p-6">
-          <Card>
-            <CardHeader>
+          <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm">
+            <CardHeader className="bg-gradient-to-r from-blue-50 to-slate-50 border-b border-blue-100">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Gestão de Anos Letivos</CardTitle>
-                  <CardDescription>Adicione, edite ou remova anos letivos</CardDescription>
+                  <CardTitle className="text-slate-800">Gestão de Anos Letivos</CardTitle>
+                  <CardDescription className="text-slate-600">Adicione, edite ou remova anos letivos</CardDescription>
                 </div>
                 <Dialog open={isAddEditDialogOpen} onOpenChange={setIsAddEditDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button onClick={openNewDialog} className="bg-teal-600 hover:bg-teal-700">
+                    <Button
+                      onClick={openNewDialog}
+                      className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                    >
                       <Plus className="h-4 w-4 mr-2" />
                       Incluir Novo Ano
                     </Button>
@@ -296,7 +329,7 @@ export default function AnosLetivosPage() {
                 </Dialog>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               {/* Filters */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-4">
@@ -327,24 +360,24 @@ export default function AnosLetivosPage() {
               </div>
 
               {/* Table */}
-              <div className="border rounded-lg">
+              <div className="border rounded-lg overflow-hidden shadow-sm bg-gradient-to-r from-slate-50 to-blue-50">
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead>Ano</TableHead>
-                      <TableHead>Descrição</TableHead>
-                      <TableHead className="w-20 text-center">Ações</TableHead>
+                    <TableRow className="bg-gradient-to-r from-blue-100 to-slate-100 border-b border-blue-200">
+                      <TableHead className="text-slate-700 font-semibold">Ano</TableHead>
+                      <TableHead className="text-slate-700 font-semibold">Descrição</TableHead>
+                      <TableHead className="w-20 text-center text-slate-700 font-semibold">Ações</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {paginatedData.map((anoItem) => (
-                      <TableRow key={anoItem.id}>
-                        <TableCell className="font-medium">{anoItem.ano}</TableCell>
-                        <TableCell>{anoItem.descricao}</TableCell>
+                      <TableRow key={anoItem.id} className="hover:bg-blue-50/50 transition-colors">
+                        <TableCell className="font-medium text-slate-700">{anoItem.ano}</TableCell>
+                        <TableCell className="text-slate-600">{anoItem.descricao}</TableCell>
                         <TableCell className="text-center">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm">
+                              <Button variant="ghost" size="sm" className="hover:bg-blue-100 transition-colors">
                                 <MoreHorizontal className="h-4 w-4 text-blue-600" />
                               </Button>
                             </DropdownMenuTrigger>

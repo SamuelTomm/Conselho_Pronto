@@ -22,7 +22,27 @@ import {
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Textarea } from "@/components/ui/textarea"
-import { Plus, MoreHorizontal, Edit, Trash2, User, LogOut, Settings, ChevronLeft, ChevronRight, School, Users, BookOpen, Home, Circle, FileText, Send, Eye, GraduationCap } from 'lucide-react'
+import {
+  Plus,
+  MoreHorizontal,
+  Edit,
+  Trash2,
+  User,
+  LogOut,
+  Settings,
+  ChevronLeft,
+  ChevronRight,
+  School,
+  Users,
+  BookOpen,
+  Home,
+  Circle,
+  FileText,
+  Send,
+  Eye,
+  GraduationCap,
+  UserCheck,
+} from "lucide-react"
 import { CourseDetailsDialog } from "@/components/course-details-dialog"
 
 // Dados simulados dos cursos
@@ -96,6 +116,7 @@ const menuItems = [
   { id: "alunos", label: "Alunos", icon: Users, active: false },
   { id: "disciplinas", label: "Disciplinas", icon: BookOpen, active: false },
   { id: "turmas", label: "Turmas", icon: Send, active: false },
+  { id: "professores", label: "Professores", icon: UserCheck, active: false },
 ]
 
 const tiposCurso = [
@@ -220,7 +241,8 @@ export default function CursosPage() {
     setCursos(cursos.filter((curso) => curso.id !== id))
   }
 
-  const handleViewCourseDetails = (curso: any) => { // Renamed function
+  const handleViewCourseDetails = (curso: any) => {
+    // Renamed function
     setSelectedCourseForDetails(curso)
     setIsCourseDetailsDialogOpen(true)
   }
@@ -233,18 +255,21 @@ export default function CursosPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-800 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-blue-900 to-slate-800 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out shadow-2xl`}
         onMouseLeave={() => setSidebarOpen(false)}
       >
-        <div className="flex items-center justify-between h-16 px-6 border-b border-slate-700">
+        <div className="flex items-center justify-between h-16 px-6 border-b border-blue-800/30">
           <div className="flex items-center space-x-3">
-            <div className="bg-teal-500 p-2 rounded-lg">
-              <School className="h-5 w-5 text-white" />
+            <div className="bg-gradient-to-r from-blue-400 to-blue-600 p-2 rounded-xl shadow-lg">
+              <School className="h-6 w-6 text-white" />
             </div>
-            <span className="text-white font-semibold text-sm">Sistema Conselho</span>
+            <div>
+              <span className="text-white font-bold text-lg">Conselho Pronto</span>
+              <p className="text-blue-200 text-xs">Sistema de Gestão</p>
+            </div>
           </div>
         </div>
 
@@ -269,10 +294,14 @@ export default function CursosPage() {
                         window.location.href = "/dashboard/disciplinas"
                       } else if (item.id === "turmas") {
                         window.location.href = "/dashboard/turmas"
+                      } else if (item.id === "professores") {
+                        window.location.href = "/dashboard/professores"
                       }
                     }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      isActive ? "bg-slate-700 text-teal-400" : "text-gray-300 hover:bg-slate-700 hover:text-white"
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left transition-all duration-200 ${
+                      isActive
+                        ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg transform scale-105"
+                        : "text-blue-100 hover:bg-blue-800/50 hover:text-white hover:transform hover:scale-105"
                     }`}
                   >
                     <Icon className="h-5 w-5" />
@@ -291,27 +320,29 @@ export default function CursosPage() {
       {/* Main Content */}
       <div className="flex-1 w-full">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200">
+        <header className="bg-white/80 backdrop-blur-md border-b border-blue-100 sticky top-0 z-30">
           <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-xl font-semibold text-gray-900">Cursos</h1>
-                <p className="text-sm text-gray-500">Gestão de Cursos do Ensino Médio</p>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                  Cursos
+                </h1>
+                <p className="text-sm text-slate-600">Gestão de Cursos do Ensino Médio</p>
               </div>
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center space-x-2">
-                    <div className="bg-blue-100 p-2 rounded-full">
+                  <Button variant="ghost" className="flex items-center space-x-2 hover:bg-blue-50 transition-colors">
+                    <div className="bg-gradient-to-r from-blue-100 to-blue-200 p-2 rounded-full">
                       <User className="h-4 w-4 text-blue-600" />
                     </div>
-                    <span className="text-sm font-medium">Prof. Maria Silva</span>
+                    <span className="text-sm font-medium text-slate-700">Prof. Maria Silva</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => (window.location.href = "/dashboard/configuracoes")}>
                     <Settings className="h-4 w-4 mr-2" />
-                    Perfil
+                    Configurações
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <LogOut className="h-4 w-4 mr-2" />
@@ -325,23 +356,30 @@ export default function CursosPage() {
 
         {/* Main Content */}
         <main className="p-6">
-          <Card>
-            <CardHeader>
+          <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm">
+            <CardHeader className="bg-gradient-to-r from-blue-50 to-slate-50 border-b border-blue-100">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Gestão de Cursos</CardTitle>
-                  <CardDescription>Gerencie os cursos do Ensino Médio: Básico, Itinerários e Técnicos</CardDescription>
+                  <CardTitle className="text-slate-800">Gestão de Cursos</CardTitle>
+                  <CardDescription className="text-slate-600">
+                    Gerencie os cursos do Ensino Médio: Básico, Itinerários e Técnicos
+                  </CardDescription>
                 </div>
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button onClick={openNewDialog} className="bg-teal-600 hover:bg-teal-700">
+                    <Button
+                      onClick={openNewDialog}
+                      className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                    >
                       <Plus className="h-4 w-4 mr-2" />
                       Incluir Novo
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[500px]">
+                  <DialogContent className="sm:max-w-[500px] bg-gradient-to-br from-white to-blue-50/30">
                     <DialogHeader>
-                      <DialogTitle>{editingCurso ? "Editar Curso" : "Novo Curso"}</DialogTitle>
+                      <DialogTitle className="text-slate-800">
+                        {editingCurso ? "Editar Curso" : "Novo Curso"}
+                      </DialogTitle>
                       <DialogDescription>
                         {editingCurso ? "Edite as informações do curso." : "Adicione um novo curso ao sistema."}
                       </DialogDescription>
@@ -349,38 +387,38 @@ export default function CursosPage() {
                     <form onSubmit={handleSubmit}>
                       <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="codigo" className="text-right">
+                          <Label htmlFor="codigo" className="text-right text-slate-700">
                             Código
                           </Label>
                           <Input
                             id="codigo"
                             value={formData.codigo}
                             onChange={(e) => setFormData({ ...formData, codigo: e.target.value })}
-                            className="col-span-3"
+                            className="col-span-3 border-blue-200 focus:border-blue-400 focus:ring-blue-400"
                             placeholder="Ex: TEC_TI"
                           />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="nome" className="text-right">
+                          <Label htmlFor="nome" className="text-right text-slate-700">
                             Nome
                           </Label>
                           <Input
                             id="nome"
                             value={formData.nome}
                             onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-                            className="col-span-3"
+                            className="col-span-3 border-blue-200 focus:border-blue-400 focus:ring-blue-400"
                             placeholder="Ex: Técnico em Informática"
                           />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="tipo" className="text-right">
+                          <Label htmlFor="tipo" className="text-right text-slate-700">
                             Tipo
                           </Label>
                           <Select
                             value={formData.tipo}
                             onValueChange={(value) => setFormData({ ...formData, tipo: value })}
                           >
-                            <SelectTrigger className="col-span-3">
+                            <SelectTrigger className="col-span-3 border-blue-200 focus:border-blue-400 focus:ring-blue-400">
                               <SelectValue placeholder="Selecione o tipo" />
                             </SelectTrigger>
                             <SelectContent>
@@ -393,14 +431,14 @@ export default function CursosPage() {
                           </Select>
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
-                          <Label htmlFor="cor" className="text-right">
+                          <Label htmlFor="cor" className="text-right text-slate-700">
                             Cor
                           </Label>
                           <Select
                             value={formData.cor}
                             onValueChange={(value) => setFormData({ ...formData, cor: value })}
                           >
-                            <SelectTrigger className="col-span-3">
+                            <SelectTrigger className="col-span-3 border-blue-200 focus:border-blue-400 focus:ring-blue-400">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -416,14 +454,14 @@ export default function CursosPage() {
                           </Select>
                         </div>
                         <div className="grid grid-cols-4 items-start gap-4">
-                          <Label htmlFor="descricao" className="text-right mt-2">
+                          <Label htmlFor="descricao" className="text-right mt-2 text-slate-700">
                             Descrição
                           </Label>
                           <Textarea
                             id="descricao"
                             value={formData.descricao}
                             onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
-                            className="col-span-3"
+                            className="col-span-3 border-blue-200 focus:border-blue-400 focus:ring-blue-400"
                             placeholder="Descrição do curso..."
                             rows={3}
                           />
@@ -435,21 +473,26 @@ export default function CursosPage() {
                         </Alert>
                       )}
                       <DialogFooter>
-                        <Button type="submit">{editingCurso ? "Salvar" : "Adicionar"}</Button>
+                        <Button
+                          type="submit"
+                          className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+                        >
+                          {editingCurso ? "Salvar" : "Adicionar"}
+                        </Button>
                       </DialogFooter>
                     </form>
                   </DialogContent>
                 </Dialog>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6">
               {/* Filters */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-2">
                     <span className="text-sm text-gray-600">Show</span>
                     <Select value={itemsPerPage} onValueChange={setItemsPerPage}>
-                      <SelectTrigger className="w-20">
+                      <SelectTrigger className="w-20 border-blue-200 focus:border-blue-400">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -467,31 +510,31 @@ export default function CursosPage() {
                     placeholder="Search"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-48"
+                    className="w-48 border-blue-200 focus:border-blue-400 focus:ring-blue-400"
                   />
                 </div>
               </div>
 
               {/* Table */}
-              <div className="border rounded-lg">
+              <div className="border rounded-lg overflow-hidden shadow-sm bg-gradient-to-r from-slate-50 to-blue-50">
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead>Código</TableHead>
-                      <TableHead>Nome do Curso</TableHead>
-                      <TableHead>Tipo</TableHead>
-                      <TableHead>Alunos</TableHead>
-                      <TableHead>Disciplinas</TableHead>
-                      <TableHead className="w-20 text-center">Ações</TableHead>
+                    <TableRow className="bg-gradient-to-r from-blue-100 to-slate-100 border-b border-blue-200">
+                      <TableHead className="text-slate-700 font-semibold">Código</TableHead>
+                      <TableHead className="text-slate-700 font-semibold">Nome do Curso</TableHead>
+                      <TableHead className="text-slate-700 font-semibold">Tipo</TableHead>
+                      <TableHead className="text-slate-700 font-semibold">Alunos</TableHead>
+                      <TableHead className="text-slate-700 font-semibold">Disciplinas</TableHead>
+                      <TableHead className="w-20 text-center text-slate-700 font-semibold">Ações</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {paginatedData.map((curso) => (
-                      <TableRow key={curso.id}>
-                        <TableCell className="font-medium">{curso.codigo}</TableCell>
+                      <TableRow key={curso.id} className="hover:bg-blue-50/50 transition-colors">
+                        <TableCell className="font-medium text-slate-700">{curso.codigo}</TableCell>
                         <TableCell>
                           <div className="flex flex-col">
-                            <span className="font-medium">{curso.nome}</span>
+                            <span className="font-medium text-slate-800">{curso.nome}</span>
                             {curso.descricao && <span className="text-sm text-gray-500">{curso.descricao}</span>}
                           </div>
                         </TableCell>
@@ -500,33 +543,39 @@ export default function CursosPage() {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center space-x-1">
-                            <GraduationCap className="h-4 w-4 text-gray-400" />
-                            <span>{curso.alunos}</span>
+                            <GraduationCap className="h-4 w-4 text-blue-500" />
+                            <span className="text-slate-700">{curso.alunos}</span>
                           </div>
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center space-x-1">
-                            <BookOpen className="h-4 w-4 text-gray-400" />
-                            <span>{curso.disciplinas}</span>
+                            <BookOpen className="h-4 w-4 text-blue-500" />
+                            <span className="text-slate-700">{curso.disciplinas}</span>
                           </div>
                         </TableCell>
                         <TableCell className="text-center">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm">
+                              <Button variant="ghost" size="sm" className="hover:bg-blue-100 transition-colors">
                                 <MoreHorizontal className="h-4 w-4 text-blue-600" />
                               </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => handleViewCourseDetails(curso)}>
-                                <Eye className="h-4 w-4 mr-2" />
+                            <DropdownMenuContent align="end" className="bg-white/95 backdrop-blur-sm">
+                              <DropdownMenuItem
+                                onClick={() => handleViewCourseDetails(curso)}
+                                className="hover:bg-blue-50"
+                              >
+                                <Eye className="h-4 w-4 mr-2 text-blue-600" />
                                 Visualizar Detalhes
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleEdit(curso)}>
-                                <Edit className="h-4 w-4 mr-2" />
+                              <DropdownMenuItem onClick={() => handleEdit(curso)} className="hover:bg-blue-50">
+                                <Edit className="h-4 w-4 mr-2 text-blue-600" />
                                 Alterar
                               </DropdownMenuItem>
-                              <DropdownMenuItem className="text-red-600" onClick={() => handleDelete(curso.id)}>
+                              <DropdownMenuItem
+                                className="text-red-600 hover:bg-red-50"
+                                onClick={() => handleDelete(curso.id)}
+                              >
                                 <Trash2 className="h-4 w-4 mr-2" />
                                 Excluir
                               </DropdownMenuItem>
@@ -552,10 +601,11 @@ export default function CursosPage() {
                     size="sm"
                     onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                     disabled={currentPage === 1}
+                    className="border-blue-200 text-blue-600 hover:bg-blue-50"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
-                  <span className="text-sm font-medium">
+                  <span className="text-sm font-medium text-slate-700">
                     {currentPage} / {totalPages}
                   </span>
                   <Button
@@ -563,6 +613,7 @@ export default function CursosPage() {
                     size="sm"
                     onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                     disabled={currentPage === totalPages}
+                    className="border-blue-200 text-blue-600 hover:bg-blue-50"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </Button>

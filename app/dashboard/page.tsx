@@ -28,6 +28,7 @@ import {
   FileText,
   Send,
   X,
+  UserCheck,
 } from "lucide-react"
 
 // Dados simulados
@@ -67,6 +68,7 @@ const menuItems = [
   { id: "alunos", label: "Alunos", icon: Users, active: false },
   { id: "disciplinas", label: "Disciplinas", icon: BookOpen, active: false },
   { id: "turmas", label: "Turmas", icon: Send, active: false },
+  { id: "professores", label: "Professores", icon: UserCheck, active: false },
 ]
 
 export default function DashboardPage() {
@@ -109,23 +111,26 @@ export default function DashboardPage() {
   const paginatedData = filteredData.slice(startIndex, startIndex + Number.parseInt(itemsPerPage))
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-800 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-blue-900 to-slate-800 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out shadow-xl`}
         onMouseLeave={() => setSidebarOpen(false)}
       >
-        <div className="flex items-center justify-between h-16 px-6 border-b border-slate-700">
+        <div className="flex items-center justify-between h-16 px-6 border-b border-blue-800">
           <div className="flex items-center space-x-3">
-            <div className="bg-teal-500 p-2 rounded-lg">
+            <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-2 rounded-lg shadow-md">
               <School className="h-5 w-5 text-white" />
             </div>
-            <span className="text-white font-semibold text-sm">Sistema Conselho</span>
+            <div>
+              <span className="text-white font-bold text-sm">Conselho Pronto</span>
+              <p className="text-blue-200 text-xs">Sistema de Gestão</p>
+            </div>
           </div>
           <Button
             variant="ghost"
             size="sm"
-            className="lg:hidden text-white hover:bg-slate-700"
+            className="lg:hidden text-white hover:bg-blue-800"
             onClick={() => setSidebarOpen(false)}
           >
             <X className="h-5 w-5" />
@@ -153,10 +158,14 @@ export default function DashboardPage() {
                         window.location.href = "/dashboard/disciplinas"
                       } else if (item.id === "turmas") {
                         window.location.href = "/dashboard/turmas"
+                      } else if (item.id === "professores") {
+                        window.location.href = "/dashboard/professores"
                       }
                     }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      isActive ? "bg-slate-700 text-teal-400" : "text-gray-300 hover:bg-slate-700 hover:text-white"
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all duration-200 ${
+                      isActive
+                        ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md transform scale-105"
+                        : "text-blue-100 hover:bg-blue-800 hover:text-white hover:transform hover:scale-105"
                     }`}
                   >
                     <Icon className="h-5 w-5" />
@@ -177,30 +186,36 @@ export default function DashboardPage() {
       {/* Área invisível para trigger da sidebar */}
       <div className="fixed left-0 top-0 w-5 h-full z-40 bg-transparent" onMouseEnter={() => setSidebarOpen(true)} />
 
-      {/* Main Content - remover lg:ml-0 e ajustar */}
+      {/* Main Content */}
       <div className="flex-1 w-full">
-        {/* Header - remover botão de menu mobile */}
-        <header className="bg-white border-b border-gray-200">
+        {/* Header */}
+        <header className="bg-white/80 backdrop-blur-sm border-b border-blue-100 shadow-sm">
           <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
-                <p className="text-sm text-gray-500">Instituto Ivoti</p>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-900 to-slate-700 bg-clip-text text-transparent">
+                  Dashboard
+                </h1>
+                <p className="text-sm text-slate-600 font-medium">Conselho Pronto - Sistema de Gestão Educacional</p>
               </div>
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center space-x-2">
-                    <div className="bg-blue-100 p-2 rounded-full">
-                      <User className="h-4 w-4 text-blue-600" />
+                  <Button variant="ghost" className="flex items-center space-x-2 hover:bg-blue-50 transition-colors">
+                    <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-2 rounded-full shadow-md">
+                      <User className="h-4 w-4 text-white" />
                     </div>
-                    <span className="text-sm font-medium">Prof. Maria Silva</span>
+                    <span className="text-sm font-medium text-slate-700">Prof. Maria Silva</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem>
                     <Settings className="h-4 w-4 mr-2" />
                     Perfil
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => (window.location.href = "/dashboard/configuracoes")}>
+                    <Settings className="h-4 w-4 mr-2" />
+                    Configurações
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <LogOut className="h-4 w-4 mr-2" />
@@ -216,57 +231,57 @@ export default function DashboardPage() {
         <main className="p-6">
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <Card>
+            <Card className="bg-white/80 backdrop-blur-sm border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:transform hover:scale-105">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Total de Turmas</p>
-                    <p className="text-2xl font-bold text-gray-900">5</p>
+                    <p className="text-sm font-medium text-slate-600">Total de Turmas</p>
+                    <p className="text-2xl font-bold text-slate-900">5</p>
                   </div>
-                  <div className="bg-blue-100 p-3 rounded-full">
-                    <Users className="h-6 w-6 text-blue-600" />
+                  <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-3 rounded-full shadow-md">
+                    <Users className="h-6 w-6 text-white" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-white/80 backdrop-blur-sm border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:transform hover:scale-105">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Total de Alunos</p>
-                    <p className="text-2xl font-bold text-gray-900">144</p>
+                    <p className="text-sm font-medium text-slate-600">Total de Alunos</p>
+                    <p className="text-2xl font-bold text-slate-900">144</p>
                   </div>
-                  <div className="bg-green-100 p-3 rounded-full">
-                    <GraduationCap className="h-6 w-6 text-green-600" />
+                  <div className="bg-gradient-to-r from-slate-500 to-slate-600 p-3 rounded-full shadow-md">
+                    <GraduationCap className="h-6 w-6 text-white" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-white/80 backdrop-blur-sm border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:transform hover:scale-105">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Disciplinas</p>
-                    <p className="text-2xl font-bold text-gray-900">51</p>
+                    <p className="text-sm font-medium text-slate-600">Disciplinas</p>
+                    <p className="text-2xl font-bold text-slate-900">51</p>
                   </div>
-                  <div className="bg-purple-100 p-3 rounded-full">
-                    <BookOpen className="h-6 w-6 text-purple-600" />
+                  <div className="bg-gradient-to-r from-blue-600 to-slate-600 p-3 rounded-full shadow-md">
+                    <BookOpen className="h-6 w-6 text-white" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-white/80 backdrop-blur-sm border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300 hover:transform hover:scale-105">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Ano Letivo</p>
-                    <p className="text-2xl font-bold text-gray-900">2024</p>
+                    <p className="text-sm font-medium text-slate-600">Ano Letivo</p>
+                    <p className="text-2xl font-bold text-slate-900">2024</p>
                   </div>
-                  <div className="bg-orange-100 p-3 rounded-full">
-                    <School className="h-6 w-6 text-orange-600" />
+                  <div className="bg-gradient-to-r from-slate-600 to-blue-600 p-3 rounded-full shadow-md">
+                    <School className="h-6 w-6 text-white" />
                   </div>
                 </div>
               </CardContent>
@@ -274,14 +289,16 @@ export default function DashboardPage() {
           </div>
 
           {/* Turmas Table */}
-          <Card>
-            <CardHeader>
+          <Card className="bg-white/80 backdrop-blur-sm border-blue-100 shadow-lg">
+            <CardHeader className="bg-gradient-to-r from-blue-50 to-slate-50 border-b border-blue-100">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Gestão de Turmas</CardTitle>
-                  <CardDescription>Gerencie as turmas e acesse os conselhos de classe</CardDescription>
+                  <CardTitle className="text-slate-900">Gestão de Turmas</CardTitle>
+                  <CardDescription className="text-slate-600">
+                    Gerencie as turmas e acesse os conselhos de classe
+                  </CardDescription>
                 </div>
-                <Button>
+                <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md hover:shadow-lg transition-all duration-200">
                   <Plus className="h-4 w-4 mr-2" />
                   Nova Turma
                 </Button>
@@ -314,32 +331,34 @@ export default function DashboardPage() {
               </div>
 
               {/* Table */}
-              <div className="border rounded-lg">
+              <div className="border border-blue-100 rounded-lg overflow-hidden shadow-sm">
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead>Turma</TableHead>
-                      <TableHead>Conselheiro</TableHead>
-                      <TableHead>Ano</TableHead>
-                      <TableHead>Alunos</TableHead>
-                      <TableHead>Disciplinas</TableHead>
+                    <TableRow className="bg-gradient-to-r from-blue-50 to-slate-50 border-b border-blue-100">
+                      <TableHead className="font-semibold text-slate-700">Turma</TableHead>
+                      <TableHead className="font-semibold text-slate-700">Conselheiro</TableHead>
+                      <TableHead className="font-semibold text-slate-700">Ano</TableHead>
+                      <TableHead className="font-semibold text-slate-700">Alunos</TableHead>
+                      <TableHead className="font-semibold text-slate-700">Disciplinas</TableHead>
                       <TableHead className="w-12"></TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {paginatedData.map((turma) => (
-                      <TableRow key={turma.id}>
-                        <TableCell className="font-medium">{turma.nome}</TableCell>
-                        <TableCell>{turma.conselheiro}</TableCell>
+                      <TableRow key={turma.id} className="hover:bg-blue-50/50 transition-colors">
+                        <TableCell className="font-medium text-slate-900">{turma.nome}</TableCell>
+                        <TableCell className="text-slate-700">{turma.conselheiro}</TableCell>
                         <TableCell>
-                          <Badge variant="outline">{turma.ano}</Badge>
+                          <Badge variant="outline" className="border-blue-200 text-blue-700 bg-blue-50">
+                            {turma.ano}
+                          </Badge>
                         </TableCell>
-                        <TableCell>{turma.alunos}</TableCell>
-                        <TableCell>{turma.disciplinas}</TableCell>
+                        <TableCell className="text-slate-700">{turma.alunos}</TableCell>
+                        <TableCell className="text-slate-700">{turma.disciplinas}</TableCell>
                         <TableCell>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm">
+                              <Button variant="ghost" size="sm" className="hover:bg-blue-100">
                                 <MoreHorizontal className="h-4 w-4 text-blue-600" />
                               </Button>
                             </DropdownMenuTrigger>
@@ -363,7 +382,7 @@ export default function DashboardPage() {
 
               {/* Pagination */}
               <div className="flex items-center justify-between mt-4">
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-slate-600">
                   Mostrando {startIndex + 1} a{" "}
                   {Math.min(startIndex + Number.parseInt(itemsPerPage), filteredData.length)} de {filteredData.length}{" "}
                   registros
@@ -374,10 +393,11 @@ export default function DashboardPage() {
                     size="sm"
                     onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                     disabled={currentPage === 1}
+                    className="border-blue-200 text-blue-700 hover:bg-blue-50"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
-                  <span className="text-sm font-medium">
+                  <span className="text-sm font-medium text-slate-700">
                     Página {currentPage} de {totalPages}
                   </span>
                   <Button
@@ -385,6 +405,7 @@ export default function DashboardPage() {
                     size="sm"
                     onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                     disabled={currentPage === totalPages}
+                    className="border-blue-200 text-blue-700 hover:bg-blue-50"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </Button>

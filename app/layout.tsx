@@ -6,9 +6,9 @@ import "./globals.css"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Sistema Conselho de Classe - Instituto Ivoti",
-  description: "Sistema para gestão de conselhos de classe e pareceres educacionais",
-    generator: 'v0.dev'
+  title: "Conselho Pronto - Sistema de Gestão Educacional",
+  description: "Sistema completo para gestão de conselhos de classe e acompanhamento acadêmico",
+  generator: "v0.dev",
 }
 
 export default function RootLayout({

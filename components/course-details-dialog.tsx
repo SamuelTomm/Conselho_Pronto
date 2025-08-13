@@ -1,24 +1,19 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
+import { useState, useEffect } from "react"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { BookOpen, User, Users, Calendar, ClipboardList, GraduationCap, FileText, Info } from 'lucide-react'
+import { BookOpen, User, Users, Calendar, ClipboardList } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 
 // Mock Data para simular as informações
 const mockDisciplinesByCourse = {
-  1: [ // Formação Básica
+  1: [
+    // Formação Básica
     { id: 101, nome: "Matemática", professor: "Prof. Ana", cargaHoraria: 80 },
     { id: 102, nome: "Português", professor: "Prof. Carlos", cargaHoraria: 80 },
     { id: 103, nome: "História", professor: "Prof. Maria", cargaHoraria: 60 },
@@ -28,7 +23,8 @@ const mockDisciplinesByCourse = {
     { id: 107, nome: "Artes", professor: "Prof. Sofia", cargaHoraria: 40 },
     { id: 108, nome: "Inglês", professor: "Prof. Daniel", cargaHoraria: 50 },
   ],
-  2: [ // Itinerário de Exatas
+  2: [
+    // Itinerário de Exatas
     { id: 201, nome: "Física Avançada", professor: "Prof. João", cargaHoraria: 90 },
     { id: 202, nome: "Cálculo I", professor: "Prof. Pedro", cargaHoraria: 100 },
     { id: 203, nome: "Química Orgânica", professor: "Prof. Fernanda", cargaHoraria: 80 },
@@ -36,7 +32,8 @@ const mockDisciplinesByCourse = {
     { id: 205, nome: "Estatística", professor: "Prof. Pedro", cargaHoraria: 60 },
     { id: 206, nome: "Programação Básica", professor: "Prof. Laura", cargaHoraria: 90 },
   ],
-  4: [ // Técnico em Informática
+  4: [
+    // Técnico em Informática
     { id: 401, nome: "Programação Web", professor: "Prof. Laura", cargaHoraria: 120 },
     { id: 402, nome: "Banco de Dados", professor: "Prof. Ricardo", cargaHoraria: 90 },
     { id: 403, nome: "Redes de Computadores", professor: "Prof. Daniel", cargaHoraria: 80 },
@@ -44,71 +41,65 @@ const mockDisciplinesByCourse = {
     { id: 405, nome: "Algoritmos e Estruturas de Dados", professor: "Prof. Laura", cargaHoraria: 100 },
     { id: 406, nome: "Segurança da Informação", professor: "Prof. Ricardo", cargaHoraria: 60 },
   ],
-};
+}
 
 const mockStudentsInDisciplineForCourse = {
-  "1-101": [ // Course 1, Discipline 101 (Matemática)
+  "1-101": [
+    // Course 1, Discipline 101 (Matemática)
     { id: 1, nome: "Ana Silva Santos", turma: "1º A", matricula: "2024001" },
     { id: 2, nome: "Bruno Costa Lima", turma: "1º A", matricula: "2024002" },
     { id: 3, nome: "Carla Oliveira", turma: "2º B", matricula: "2024003" },
     { id: 4, nome: "Diego Ferreira", turma: "3º A", matricula: "2024004" },
   ],
-  "1-102": [ // Course 1, Discipline 102 (Português)
+  "1-102": [
+    // Course 1, Discipline 102 (Português)
     { id: 1, nome: "Ana Silva Santos", turma: "1º A", matricula: "2024001" },
     { id: 4, nome: "Diego Ferreira", turma: "3º A", matricula: "2024004" },
     { id: 5, nome: "Eduardo Mendes", turma: "2º A", matricula: "2024005" },
   ],
-  "4-401": [ // Course 4, Discipline 401 (Programação Web)
+  "4-401": [
+    // Course 4, Discipline 401 (Programação Web)
     { id: 8, nome: "Helena Cardoso", turma: "1º TI", matricula: "2024008" },
     { id: 9, nome: "Igor Nascimento", turma: "2º TI", matricula: "2024009" },
     { id: 10, nome: "Julia Martins", turma: "1º TI", matricula: "2024010" },
   ],
-};
+}
 
 const mockStudentDisciplinePerformance = {
-  "1-101-1": { // Course 1, Discipline 101, Student 1 (Ana Silva Santos)
-    notas: [
-      { bimestre: "1º", n1: 8.5, n2: 9.0, n3: 8.0, n4: 9.5, rec: null, media: 8.75, status: "Aprovado" },
-    ],
+  "1-101-1": {
+    // Course 1, Discipline 101, Student 1 (Ana Silva Santos)
+    notas: [{ bimestre: "1º", n1: 8.5, n2: 9.0, n3: 8.0, n4: 9.5, rec: null, media: 8.75, status: "Aprovado" }],
     faltas: [
       { data: "2024-03-10", justificadas: 1, naoJustificadas: 0, observacao: "Atestado médico" },
       { data: "2024-04-05", justificadas: 0, naoJustificadas: 1, observacao: "Atraso" },
     ],
-    infoAdicional: "Excelente participação e dedicação. Sempre entrega os trabalhos no prazo."
+    infoAdicional: "Excelente participação e dedicação. Sempre entrega os trabalhos no prazo.",
   },
-  "1-101-2": { // Course 1, Discipline 101, Student 2 (Bruno Costa Lima)
-    notas: [
-      { bimestre: "1º", n1: 6.0, n2: 7.0, n3: 5.5, n4: 6.5, rec: 7.0, media: 6.5, status: "Aprovado" },
-    ],
-    faltas: [
-      { data: "2024-03-15", justificadas: 0, naoJustificadas: 1, observacao: "Faltou sem justificativa" },
-    ],
-    infoAdicional: "Precisa melhorar a atenção em sala de aula. Recuperação bem-sucedida."
+  "1-101-2": {
+    // Course 1, Discipline 101, Student 2 (Bruno Costa Lima)
+    notas: [{ bimestre: "1º", n1: 6.0, n2: 7.0, n3: 5.5, n4: 6.5, rec: 7.0, media: 6.5, status: "Aprovado" }],
+    faltas: [{ data: "2024-03-15", justificadas: 0, naoJustificadas: 1, observacao: "Faltou sem justificativa" }],
+    infoAdicional: "Precisa melhorar a atenção em sala de aula. Recuperação bem-sucedida.",
   },
-  "1-102-1": { // Course 1, Discipline 102, Student 1 (Ana Silva Santos)
-    notas: [
-      { bimestre: "1º", n1: 9.0, n2: 8.5, n3: 9.0, n4: 9.0, rec: null, media: 8.88, status: "Aprovado" },
-    ],
+  "1-102-1": {
+    // Course 1, Discipline 102, Student 1 (Ana Silva Santos)
+    notas: [{ bimestre: "1º", n1: 9.0, n2: 8.5, n3: 9.0, n4: 9.0, rec: null, media: 8.88, status: "Aprovado" }],
     faltas: [],
-    infoAdicional: "Ótima leitura e interpretação de texto."
+    infoAdicional: "Ótima leitura e interpretação de texto.",
   },
-  "4-401-8": { // Course 4, Discipline 401, Student 8 (Helena Cardoso)
-    notas: [
-      { bimestre: "1º", n1: 9.0, n2: 8.5, n3: 9.5, n4: 9.0, rec: null, media: 9.0, status: "Aprovado" },
-    ],
+  "4-401-8": {
+    // Course 4, Discipline 401, Student 8 (Helena Cardoso)
+    notas: [{ bimestre: "1º", n1: 9.0, n2: 8.5, n3: 9.5, n4: 9.0, rec: null, media: 9.0, status: "Aprovado" }],
     faltas: [],
-    infoAdicional: "Aluna exemplar, com grande aptidão para programação. Ajuda os colegas."
+    infoAdicional: "Aluna exemplar, com grande aptidão para programação. Ajuda os colegas.",
   },
-  "4-401-9": { // Course 4, Discipline 401, Student 9 (Igor Nascimento)
-    notas: [
-      { bimestre: "1º", n1: 7.0, n2: 7.5, n3: 6.5, n4: 7.0, rec: null, media: 7.0, status: "Aprovado" },
-    ],
-    faltas: [
-      { data: "2024-05-01", justificadas: 0, naoJustificadas: 1, observacao: "Feriado prolongado" },
-    ],
-    infoAdicional: "Bom raciocínio lógico, mas precisa praticar mais a sintaxe."
+  "4-401-9": {
+    // Course 4, Discipline 401, Student 9 (Igor Nascimento)
+    notas: [{ bimestre: "1º", n1: 7.0, n2: 7.5, n3: 6.5, n4: 7.0, rec: null, media: 7.0, status: "Aprovado" }],
+    faltas: [{ data: "2024-05-01", justificadas: 0, naoJustificadas: 1, observacao: "Feriado prolongado" }],
+    infoAdicional: "Bom raciocínio lógico, mas precisa praticar mais a sintaxe.",
   },
-};
+}
 
 interface CourseDetailsDialogProps {
   open: boolean
@@ -133,38 +124,43 @@ export function CourseDetailsDialog({ open, onOpenChange, course }: CourseDetail
   }, [open, course])
 
   const disciplinesForCourse = mockDisciplinesByCourse[course?.id as keyof typeof mockDisciplinesByCourse] || []
-  const filteredDisciplines = disciplinesForCourse.filter(d =>
-    d.nome.toLowerCase().includes(searchTermDiscipline.toLowerCase()) ||
-    d.professor.toLowerCase().includes(searchTermDiscipline.toLowerCase())
-  );
+  const filteredDisciplines = disciplinesForCourse.filter(
+    (d) =>
+      d.nome.toLowerCase().includes(searchTermDiscipline.toLowerCase()) ||
+      d.professor.toLowerCase().includes(searchTermDiscipline.toLowerCase()),
+  )
 
   const studentsInSelectedDiscipline = selectedDiscipline
-    ? (mockStudentsInDisciplineForCourse[`${course.id}-${selectedDiscipline.id}` as keyof typeof mockStudentsInDisciplineForCourse] || [])
-    : [];
+    ? mockStudentsInDisciplineForCourse[
+        `${course.id}-${selectedDiscipline.id}` as keyof typeof mockStudentsInDisciplineForCourse
+      ] || []
+    : []
 
-  const filteredStudents = studentsInSelectedDiscipline.filter(s =>
-    s.nome.toLowerCase().includes(searchTermStudent.toLowerCase()) ||
-    s.matricula.toLowerCase().includes(searchTermStudent.toLowerCase())
-  );
+  const filteredStudents = studentsInSelectedDiscipline.filter(
+    (s) =>
+      s.nome.toLowerCase().includes(searchTermStudent.toLowerCase()) ||
+      s.matricula.toLowerCase().includes(searchTermStudent.toLowerCase()),
+  )
 
-  const studentPerformance = selectedStudent && selectedDiscipline
-    ? mockStudentDisciplinePerformance[`${course.id}-${selectedDiscipline.id}-${selectedStudent.id}` as keyof typeof mockStudentDisciplinePerformance]
-    : null;
+  const studentPerformance =
+    selectedStudent && selectedDiscipline
+      ? mockStudentDisciplinePerformance[
+          `${course.id}-${selectedDiscipline.id}-${selectedStudent.id}` as keyof typeof mockStudentDisciplinePerformance
+        ]
+      : null
 
   const getMediaColor = (media: number) => {
-    if (media >= 8.0) return "text-green-600";
-    if (media >= 6.0) return "text-orange-500";
-    return "text-red-600";
-  };
+    if (media >= 8.0) return "text-green-600"
+    if (media >= 6.0) return "text-orange-500"
+    return "text-red-600"
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>Detalhes do Curso: {course?.nome}</DialogTitle>
-          <DialogDescription>
-            Visualize as disciplinas, notas e faltas dos alunos neste curso.
-          </DialogDescription>
+          <DialogDescription>Visualize as disciplinas, notas e faltas dos alunos neste curso.</DialogDescription>
         </DialogHeader>
         <div className="flex flex-1 overflow-hidden">
           {/* Left Panel: Disciplines List */}
@@ -190,11 +186,11 @@ export function CourseDetailsDialog({ open, onOpenChange, course }: CourseDetail
                       <TableRow
                         key={discipline.id}
                         onClick={() => {
-                          setSelectedDiscipline(discipline);
-                          setSelectedStudent(null); // Reset student selection
-                          setSearchTermStudent("");
+                          setSelectedDiscipline(discipline)
+                          setSelectedStudent(null) // Reset student selection
+                          setSearchTermStudent("")
                         }}
-                        className={`cursor-pointer ${selectedDiscipline?.id === discipline.id ? "bg-gray-100" : ""}`}
+                        className={`cursor-pointer transition-colors ${selectedDiscipline?.id === discipline.id ? "bg-blue-50 border-l-4 border-blue-600" : "hover:bg-blue-50/50"}`}
                       >
                         <TableCell className="font-medium">{discipline.nome}</TableCell>
                         <TableCell>{discipline.professor}</TableCell>
@@ -221,9 +217,7 @@ export function CourseDetailsDialog({ open, onOpenChange, course }: CourseDetail
               </div>
             ) : (
               <>
-                <h3 className="text-lg font-semibold mb-2">
-                  Detalhes da Disciplina: {selectedDiscipline.nome}
-                </h3>
+                <h3 className="text-lg font-semibold mb-2">Detalhes da Disciplina: {selectedDiscipline.nome}</h3>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -269,11 +263,13 @@ export function CourseDetailsDialog({ open, onOpenChange, course }: CourseDetail
                           <TableRow
                             key={student.id}
                             onClick={() => setSelectedStudent(student)}
-                            className={`cursor-pointer ${selectedStudent?.id === student.id ? "bg-gray-100" : ""}`}
+                            className={`cursor-pointer transition-colors ${selectedStudent?.id === student.id ? "bg-blue-50 border-l-4 border-blue-600" : "hover:bg-blue-50/50"}`}
                           >
                             <TableCell className="font-medium">{student.nome}</TableCell>
                             <TableCell>{student.matricula}</TableCell>
-                            <TableCell><Badge variant="outline">{student.turma}</Badge></TableCell>
+                            <TableCell>
+                              <Badge variant="outline">{student.turma}</Badge>
+                            </TableCell>
                           </TableRow>
                         ))
                       ) : (
@@ -300,7 +296,9 @@ export function CourseDetailsDialog({ open, onOpenChange, course }: CourseDetail
                           <ClipboardList className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                          <div className={`text-2xl font-bold ${getMediaColor(parseFloat(studentPerformance.notas[0]?.media || '0'))}`}>
+                          <div
+                            className={`text-2xl font-bold ${getMediaColor(Number.parseFloat(studentPerformance.notas[0]?.media || "0"))}`}
+                          >
                             {studentPerformance.notas[0]?.media || "N/A"}
                           </div>
                         </CardContent>
@@ -312,8 +310,8 @@ export function CourseDetailsDialog({ open, onOpenChange, course }: CourseDetail
                         </CardHeader>
                         <CardContent>
                           <div className="text-2xl font-bold">
-                            {studentPerformance.faltas.reduce((sum, f) => sum + f.justificadas + f.naoJustificadas, 0)} /{" "}
-                            {studentPerformance.faltas.reduce((sum, f) => sum + f.justificadas, 0)}
+                            {studentPerformance.faltas.reduce((sum, f) => sum + f.justificadas + f.naoJustificadas, 0)}{" "}
+                            / {studentPerformance.faltas.reduce((sum, f) => sum + f.justificadas, 0)}
                           </div>
                         </CardContent>
                       </Card>
@@ -342,11 +340,18 @@ export function CourseDetailsDialog({ open, onOpenChange, course }: CourseDetail
                             <TableCell>{nota.n3}</TableCell>
                             <TableCell>{nota.n4}</TableCell>
                             <TableCell>{nota.rec || "-"}</TableCell>
-                            <TableCell className={`font-medium ${getMediaColor(parseFloat(nota.media))}`}>
+                            <TableCell className={`font-medium ${getMediaColor(Number.parseFloat(nota.media))}`}>
                               {nota.media}
                             </TableCell>
                             <TableCell>
-                              <Badge variant="outline" className={nota.status === "Aprovado" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}>
+                              <Badge
+                                variant="outline"
+                                className={
+                                  nota.status === "Aprovado"
+                                    ? "bg-green-50 text-green-700 border-green-200"
+                                    : "bg-red-50 text-red-700 border-red-200"
+                                }
+                              >
                                 {nota.status}
                               </Badge>
                             </TableCell>
@@ -388,11 +393,14 @@ export function CourseDetailsDialog({ open, onOpenChange, course }: CourseDetail
                       </CardContent>
                     </Card>
                   </>
-                ) : selectedDiscipline && filteredStudents.length > 0 && (
-                  <div className="flex flex-col items-center justify-center h-full text-gray-500">
-                    <Users className="h-16 w-16 mb-4 text-gray-300" />
-                    <p className="text-lg">Selecione um aluno para ver seu desempenho nesta disciplina.</p>
-                  </div>
+                ) : (
+                  selectedDiscipline &&
+                  filteredStudents.length > 0 && (
+                    <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                      <Users className="h-16 w-16 mb-4 text-gray-300" />
+                      <p className="text-lg">Selecione um aluno para ver seu desempenho nesta disciplina.</p>
+                    </div>
+                  )
                 )}
                 {selectedDiscipline && filteredStudents.length === 0 && (
                   <div className="flex flex-col items-center justify-center h-full text-gray-500">

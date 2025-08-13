@@ -16,7 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { User, Users, BookOpen, Calendar, Search, ChevronRight, GraduationCap, ClipboardList } from 'lucide-react'
+import { User, Users, BookOpen, Calendar, ClipboardList } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 
 interface TrimestreDashboardDialogProps {
@@ -33,13 +33,13 @@ const mockAlunos = [
     matricula: "2023001",
     nome: "Ana Clara Silva",
     turma: "9º A",
-    mediaGeral: 8.50,
+    mediaGeral: 8.5,
     faltasTotal: 5,
     faltasJustificadas: 2,
     notas: [
       { disciplina: "Matemática", n1: 9.0, n2: 8.0, n3: 9.5, n4: 8.5, rec: null, media: 8.75, situacao: "Aprovado" },
       { disciplina: "Português", n1: 7.0, n2: 7.5, n3: 8.0, n4: 7.0, rec: null, media: 7.38, situacao: "Aprovado" },
-      { disciplina: "História", n1: 6.0, n2: 5.5, n3: 7.0, n4: 6.5, rec: 7.0, media: 6.50, situacao: "Aprovado" },
+      { disciplina: "História", n1: 6.0, n2: 5.5, n3: 7.0, n4: 6.5, rec: 7.0, media: 6.5, situacao: "Aprovado" },
       { disciplina: "Geografia", n1: 8.5, n2: 8.0, n3: 9.0, n4: 8.8, rec: null, media: 8.58, situacao: "Aprovado" },
     ],
     historicoAcademico: "Bom desempenho geral, com algumas dificuldades em história no início.",
@@ -49,7 +49,7 @@ const mockAlunos = [
     matricula: "2023002",
     nome: "Bruno Costa",
     turma: "9º A",
-    mediaGeral: 6.20,
+    mediaGeral: 6.2,
     faltasTotal: 8,
     faltasJustificadas: 2,
     notas: [
@@ -64,7 +64,7 @@ const mockAlunos = [
     matricula: "2023003",
     nome: "Carla Dias",
     turma: "1º B",
-    mediaGeral: 7.90,
+    mediaGeral: 7.9,
     faltasTotal: 3,
     faltasJustificadas: 1,
     notas: [
@@ -83,9 +83,9 @@ const mockTurmas = [
     totalAlunos: 25,
     mediaGeralTurma: 7.35,
     alunos: [
-      { id: 1, nome: "Ana Clara Silva", mediaTrimestre: 8.50, faltas: 5 },
-      { id: 2, nome: "Bruno Costa", mediaTrimestre: 6.20, faltas: 8 },
-      { id: 4, nome: "Daniela Pereira", mediaTrimestre: 7.90, faltas: 2 },
+      { id: 1, nome: "Ana Clara Silva", mediaTrimestre: 8.5, faltas: 5 },
+      { id: 2, nome: "Bruno Costa", mediaTrimestre: 6.2, faltas: 8 },
+      { id: 4, nome: "Daniela Pereira", mediaTrimestre: 7.9, faltas: 2 },
     ],
   },
   {
@@ -93,10 +93,10 @@ const mockTurmas = [
     nome: "1º B",
     periodo: "Tarde",
     totalAlunos: 22,
-    mediaGeralTurma: 8.10,
+    mediaGeralTurma: 8.1,
     alunos: [
-      { id: 3, nome: "Carla Dias", mediaTrimestre: 7.90, faltas: 3 },
-      { id: 5, nome: "Elisa Fernandes", mediaTrimestre: 8.80, faltas: 0 },
+      { id: 3, nome: "Carla Dias", mediaTrimestre: 7.9, faltas: 3 },
+      { id: 5, nome: "Elisa Fernandes", mediaTrimestre: 8.8, faltas: 0 },
     ],
   },
 ]
@@ -140,11 +140,27 @@ export function TrimestreDashboardDialog({ ano, trimestre, isOpen, onClose }: Tr
         </DialogHeader>
 
         <Tabs defaultValue="alunos" className="flex-1 flex flex-col overflow-hidden">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="alunos" onClick={() => { setActiveTab("alunos"); setSelectedAluno(null); setSelectedTurma(null); }}>
+          <TabsList className="grid w-full grid-cols-2 bg-blue-50">
+            <TabsTrigger
+              value="alunos"
+              onClick={() => {
+                setActiveTab("alunos")
+                setSelectedAluno(null)
+                setSelectedTurma(null)
+              }}
+              className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+            >
               Alunos
             </TabsTrigger>
-            <TabsTrigger value="turmas" onClick={() => { setActiveTab("turmas"); setSelectedAluno(null); setSelectedTurma(null); }}>
+            <TabsTrigger
+              value="turmas"
+              onClick={() => {
+                setActiveTab("turmas")
+                setSelectedAluno(null)
+                setSelectedTurma(null)
+              }}
+              className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+            >
               Turmas
             </TabsTrigger>
           </TabsList>
@@ -180,7 +196,15 @@ export function TrimestreDashboardDialog({ ano, trimestre, isOpen, onClose }: Tr
                         </TableRow>
                       ) : (
                         filteredAlunos.map((aluno) => (
-                          <TableRow key={aluno.id} onClick={() => setSelectedAluno(aluno)} className={selectedAluno?.id === aluno.id ? "bg-blue-50 cursor-pointer" : "cursor-pointer hover:bg-gray-50"}>
+                          <TableRow
+                            key={aluno.id}
+                            onClick={() => setSelectedAluno(aluno)}
+                            className={
+                              selectedAluno?.id === aluno.id
+                                ? "bg-blue-50 cursor-pointer border-l-4 border-blue-600"
+                                : "cursor-pointer hover:bg-blue-50/50"
+                            }
+                          >
                             <TableCell className="font-medium">{aluno.nome}</TableCell>
                             <TableCell>{aluno.turma}</TableCell>
                           </TableRow>
@@ -193,31 +217,29 @@ export function TrimestreDashboardDialog({ ano, trimestre, isOpen, onClose }: Tr
               <div className="md:col-span-2 border rounded-lg p-4 overflow-y-auto">
                 {selectedAluno ? (
                   <div className="space-y-6">
-                    <h3 className="text-xl font-semibold text-gray-800">
-                      Detalhes do Aluno: {selectedAluno.nome}
-                    </h3>
+                    <h3 className="text-xl font-semibold text-gray-800">Detalhes do Aluno: {selectedAluno.nome}</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Card>
+                      <Card className="border-blue-100 bg-blue-50/30">
                         <CardContent className="flex items-center p-4">
-                          <User className="h-5 w-5 text-gray-500 mr-3" />
+                          <User className="h-5 w-5 text-blue-600 mr-3" />
                           <div>
                             <Label className="text-sm text-gray-500">Matrícula</Label>
                             <p className="text-lg font-bold">{selectedAluno.matricula}</p>
                           </div>
                         </CardContent>
                       </Card>
-                      <Card>
+                      <Card className="border-blue-100 bg-blue-50/30">
                         <CardContent className="flex items-center p-4">
-                          <Users className="h-5 w-5 text-gray-500 mr-3" />
+                          <Users className="h-5 w-5 text-blue-600 mr-3" />
                           <div>
                             <Label className="text-sm text-gray-500">Turma</Label>
                             <p className="text-lg font-bold">{selectedAluno.turma}</p>
                           </div>
                         </CardContent>
                       </Card>
-                      <Card>
+                      <Card className="border-blue-100 bg-blue-50/30">
                         <CardContent className="flex items-center p-4">
-                          <BookOpen className="h-5 w-5 text-gray-500 mr-3" />
+                          <BookOpen className="h-5 w-5 text-blue-600 mr-3" />
                           <div>
                             <Label className="text-sm text-gray-500">Média Trimestre</Label>
                             <p className={`text-lg font-bold ${getMediaColor(selectedAluno.mediaGeral)}`}>
@@ -226,9 +248,9 @@ export function TrimestreDashboardDialog({ ano, trimestre, isOpen, onClose }: Tr
                           </div>
                         </CardContent>
                       </Card>
-                      <Card>
+                      <Card className="border-blue-100 bg-blue-50/30">
                         <CardContent className="flex items-center p-4">
-                          <Calendar className="h-5 w-5 text-gray-500 mr-3" />
+                          <Calendar className="h-5 w-5 text-blue-600 mr-3" />
                           <div>
                             <Label className="text-sm text-gray-500">Faltas (Total/Just.)</Label>
                             <p className="text-lg font-bold">
@@ -268,7 +290,9 @@ export function TrimestreDashboardDialog({ ano, trimestre, isOpen, onClose }: Tr
                             <TableCell>
                               <Badge
                                 className={
-                                  nota.situacao === "Aprovado" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                                  nota.situacao === "Aprovado"
+                                    ? "bg-green-50 text-green-700 border-green-200"
+                                    : "bg-red-50 text-red-700 border-red-200"
                                 }
                               >
                                 {nota.situacao}
@@ -322,7 +346,15 @@ export function TrimestreDashboardDialog({ ano, trimestre, isOpen, onClose }: Tr
                         </TableRow>
                       ) : (
                         filteredTurmas.map((turma) => (
-                          <TableRow key={turma.id} onClick={() => setSelectedTurma(turma)} className={selectedTurma?.id === turma.id ? "bg-blue-50 cursor-pointer" : "cursor-pointer hover:bg-gray-50"}>
+                          <TableRow
+                            key={turma.id}
+                            onClick={() => setSelectedTurma(turma)}
+                            className={
+                              selectedTurma?.id === turma.id
+                                ? "bg-blue-50 cursor-pointer border-l-4 border-blue-600"
+                                : "cursor-pointer hover:bg-blue-50/50"
+                            }
+                          >
                             <TableCell className="font-medium">{turma.nome}</TableCell>
                             <TableCell>{turma.periodo}</TableCell>
                           </TableRow>
@@ -335,31 +367,29 @@ export function TrimestreDashboardDialog({ ano, trimestre, isOpen, onClose }: Tr
               <div className="md:col-span-2 border rounded-lg p-4 overflow-y-auto">
                 {selectedTurma ? (
                   <div className="space-y-6">
-                    <h3 className="text-xl font-semibold text-gray-800">
-                      Detalhes da Turma: {selectedTurma.nome}
-                    </h3>
+                    <h3 className="text-xl font-semibold text-gray-800">Detalhes da Turma: {selectedTurma.nome}</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Card>
+                      <Card className="border-blue-100 bg-blue-50/30">
                         <CardContent className="flex items-center p-4">
-                          <Calendar className="h-5 w-5 text-gray-500 mr-3" />
+                          <Calendar className="h-5 w-5 text-blue-600 mr-3" />
                           <div>
                             <Label className="text-sm text-gray-500">Período</Label>
                             <p className="text-lg font-bold">{selectedTurma.periodo}</p>
                           </div>
                         </CardContent>
                       </Card>
-                      <Card>
+                      <Card className="border-blue-100 bg-blue-50/30">
                         <CardContent className="flex items-center p-4">
-                          <Users className="h-5 w-5 text-gray-500 mr-3" />
+                          <Users className="h-5 w-5 text-blue-600 mr-3" />
                           <div>
                             <Label className="text-sm text-gray-500">Total de Alunos</Label>
                             <p className="text-lg font-bold">{selectedTurma.totalAlunos}</p>
                           </div>
                         </CardContent>
                       </Card>
-                      <Card className="sm:col-span-2">
+                      <Card className="sm:col-span-2 border-blue-100 bg-blue-50/30">
                         <CardContent className="flex items-center p-4">
-                          <ClipboardList className="h-5 w-5 text-gray-500 mr-3" />
+                          <ClipboardList className="h-5 w-5 text-blue-600 mr-3" />
                           <div>
                             <Label className="text-sm text-gray-500">Média Geral Trimestre</Label>
                             <p className={`text-lg font-bold ${getMediaColor(selectedTurma.mediaGeralTurma)}`}>
@@ -402,8 +432,13 @@ export function TrimestreDashboardDialog({ ano, trimestre, isOpen, onClose }: Tr
           </TabsContent>
         </Tabs>
 
-        <DialogFooter>
-          <Button onClick={onClose}>Fechar</Button>
+        <DialogFooter className="bg-blue-50/30 border-t border-blue-100">
+          <Button
+            onClick={onClose}
+            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
+          >
+            Fechar
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

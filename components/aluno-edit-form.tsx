@@ -272,7 +272,9 @@ export function AlunoEditForm({ aluno, isOpen, onClose, onSave }: AlunoEditFormP
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
                     className={`w-full flex items-center space-x-2 px-3 py-2 rounded-lg text-left transition-colors ${
-                      activeTab === tab.id ? "bg-blue-100 text-blue-700 font-medium" : "text-gray-600 hover:bg-gray-100"
+                      activeTab === tab.id
+                        ? "bg-blue-50 text-blue-700 font-medium border-l-4 border-blue-600"
+                        : "text-gray-600 hover:bg-blue-50/50"
                     }`}
                   >
                     <Icon className="h-4 w-4" />
@@ -425,7 +427,7 @@ export function AlunoEditForm({ aluno, isOpen, onClose, onSave }: AlunoEditFormP
                       setNotaForm({ disciplina: "", n1: "", n2: "", n3: "", n4: "", recuperacao: "", observacoes: "" })
                       setIsNotaDialogOpen(true)
                     }}
-                    className="bg-teal-600 hover:bg-teal-700"
+                    className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Adicionar Nota
@@ -613,7 +615,10 @@ export function AlunoEditForm({ aluno, isOpen, onClose, onSave }: AlunoEditFormP
           <Button variant="outline" onClick={onClose}>
             Cancelar
           </Button>
-          <Button onClick={handleSave} className="bg-teal-600 hover:bg-teal-700">
+          <Button
+            onClick={handleSave}
+            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
+          >
             <Save className="h-4 w-4 mr-2" />
             Salvar Alterações
           </Button>

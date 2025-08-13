@@ -10,8 +10,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Eye } from 'lucide-react'
+import { Card, CardDescription, CardTitle } from "@/components/ui/card"
+import { Eye } from "lucide-react"
 import { TrimestreDashboardDialog } from "@/components/trimestre-dashboard-dialog" // Novo componente
 
 interface AnoTrimestersDialogProps {
@@ -45,20 +45,32 @@ export function AnoTrimestersDialog({ ano, isOpen, onClose }: AnoTrimestersDialo
           </DialogHeader>
           <div className="grid gap-4 py-4">
             {trimesters.map((trimestre) => (
-              <Card key={trimestre.id} className="flex items-center justify-between p-4">
+              <Card
+                key={trimestre.id}
+                className="flex items-center justify-between p-4 border-blue-100 bg-blue-50/30 hover:bg-blue-50/50 transition-colors"
+              >
                 <div>
-                  <CardTitle className="text-lg">{trimestre.nome}</CardTitle>
-                  <CardDescription>{trimestre.periodo}</CardDescription>
+                  <CardTitle className="text-lg text-blue-800">{trimestre.nome}</CardTitle>
+                  <CardDescription className="text-blue-600">{trimestre.periodo}</CardDescription>
                 </div>
-                <Button variant="outline" onClick={() => handleViewTrimestre(trimestre)}>
+                <Button
+                  variant="outline"
+                  onClick={() => handleViewTrimestre(trimestre)}
+                  className="border-blue-200 text-blue-700 hover:bg-blue-50 hover:border-blue-300"
+                >
                   <Eye className="h-4 w-4 mr-2" />
                   Visualizar Dashboard
                 </Button>
               </Card>
             ))}
           </div>
-          <DialogFooter>
-            <Button onClick={onClose}>Fechar</Button>
+          <DialogFooter className="bg-blue-50/30 border-t border-blue-100">
+            <Button
+              onClick={onClose}
+              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
+            >
+              Fechar
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
