@@ -204,6 +204,15 @@ export default function DisciplinasPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [activeMenuItem, setActiveMenuItem] = useState("disciplinas")
   const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const handleLogout = () => {
+    // Limpar dados de sessão (se houver)
+    localStorage.removeItem("user")
+    sessionStorage.clear()
+    
+    // Redirecionar para a página de login
+    window.location.href = "/"
+  }
   const [disciplinas, setDisciplinas] = useState(disciplinasData)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isAlunosDialogOpen, setIsAlunosDialogOpen] = useState(false)
@@ -726,7 +735,7 @@ export default function DisciplinasPage() {
                     <Settings className="h-4 w-4 mr-2" />
                     Configurações
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="h-4 w-4 mr-2" />
                     Sair
                   </DropdownMenuItem>

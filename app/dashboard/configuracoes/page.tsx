@@ -146,6 +146,15 @@ export default function ConfiguracoesPage() {
   const [activeTab, setActiveTab] = useState("perfil")
   const [successMessage, setSuccessMessage] = useState("")
 
+  const handleLogout = () => {
+    // Limpar dados de sessão (se houver)
+    localStorage.removeItem("user")
+    sessionStorage.clear()
+    
+    // Redirecionar para a página de login
+    window.location.href = "/"
+  }
+
   const [professores, setProfessores] = useState(mockProfessores)
   const [isAddProfessorOpen, setIsAddProfessorOpen] = useState(false)
   const [isEditProfessorOpen, setIsEditProfessorOpen] = useState(false)
@@ -388,7 +397,7 @@ export default function ConfiguracoesPage() {
                     <Settings className="h-4 w-4 mr-2" />
                     Perfil
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="h-4 w-4 mr-2" />
                     Sair
                   </DropdownMenuItem>

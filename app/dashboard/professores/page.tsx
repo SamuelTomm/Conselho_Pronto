@@ -135,6 +135,15 @@ export default function ProfessoresPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [activeMenuItem, setActiveMenuItem] = useState("professores")
   const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const handleLogout = () => {
+    // Limpar dados de sessão (se houver)
+    localStorage.removeItem("user")
+    sessionStorage.clear()
+    
+    // Redirecionar para a página de login
+    window.location.href = "/"
+  }
   const [professores, setProfessores] = useState(professoresData)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingProfessor, setEditingProfessor] = useState<any>(null)
@@ -410,7 +419,7 @@ export default function ProfessoresPage() {
                     <Settings className="h-4 w-4 mr-2" />
                     Configurações
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="h-4 w-4 mr-2" />
                     Sair
                   </DropdownMenuItem>

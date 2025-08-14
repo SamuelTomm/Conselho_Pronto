@@ -140,6 +140,15 @@ export default function CursosPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [activeMenuItem, setActiveMenuItem] = useState("cursos")
   const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const handleLogout = () => {
+    // Limpar dados de sessão (se houver)
+    localStorage.removeItem("user")
+    sessionStorage.clear()
+    
+    // Redirecionar para a página de login
+    window.location.href = "/"
+  }
   const [cursos, setCursos] = useState(cursosData)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isCourseDetailsDialogOpen, setIsCourseDetailsDialogOpen] = useState(false) // Renamed
@@ -344,7 +353,7 @@ export default function CursosPage() {
                     <Settings className="h-4 w-4 mr-2" />
                     Configurações
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="h-4 w-4 mr-2" />
                     Sair
                   </DropdownMenuItem>

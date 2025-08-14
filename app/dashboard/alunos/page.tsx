@@ -299,6 +299,15 @@ export default function AlunosPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [activeMenuItem, setActiveMenuItem] = useState("alunos")
   const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const handleLogout = () => {
+    // Limpar dados de sessão (se houver)
+    localStorage.removeItem("user")
+    sessionStorage.clear()
+    
+    // Redirecionar para a página de login
+    window.location.href = "/"
+  }
   const [alunos, setAlunos] = useState(alunosData)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
@@ -582,7 +591,7 @@ export default function AlunosPage() {
                     <Settings className="h-4 w-4 mr-2" />
                     Configurações
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="h-4 w-4 mr-2" />
                     Sair
                   </DropdownMenuItem>

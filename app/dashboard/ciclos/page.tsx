@@ -65,6 +65,15 @@ export default function AnosLetivosPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [activeMenuItem, setActiveMenuItem] = useState("ciclos")
   const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const handleLogout = () => {
+    // Limpar dados de sessão (se houver)
+    localStorage.removeItem("user")
+    sessionStorage.clear()
+    
+    // Redirecionar para a página de login
+    window.location.href = "/"
+  }
   const [anos, setAnos] = useState(anosData)
   const [isAddEditDialogOpen, setIsAddEditDialogOpen] = useState(false) // Para adicionar/editar ano
   const [isAnoTrimestersDialogOpen, setIsAnoTrimestersDialogOpen] = useState(false) // Para visualizar trimestres do ano
@@ -250,7 +259,7 @@ export default function AnosLetivosPage() {
                     <Settings className="h-4 w-4 mr-2" />
                     Configurações
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="h-4 w-4 mr-2" />
                     Sair
                   </DropdownMenuItem>

@@ -350,6 +350,15 @@ export default function TurmasPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [activeMenuItem, setActiveMenuItem] = useState("turmas")
   const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const handleLogout = () => {
+    // Limpar dados de sessão (se houver)
+    localStorage.removeItem("user")
+    sessionStorage.clear()
+    
+    // Redirecionar para a página de login
+    window.location.href = "/"
+  }
   const [turmas, setTurmas] = useState(turmasData)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingTurma, setEditingTurma] = useState(null)
@@ -984,7 +993,7 @@ export default function TurmasPage() {
                         <Settings className="mr-2 h-4 w-4" />
                         Configurações
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => (window.location.href = "/")}>
+                      <DropdownMenuItem onClick={handleLogout}>
                         <LogOut className="mr-2 h-4 w-4" />
                         Sair
                       </DropdownMenuItem>

@@ -78,6 +78,15 @@ export default function DashboardPage() {
   const [activeMenuItem, setActiveMenuItem] = useState("inicio")
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
+  const handleLogout = () => {
+    // Limpar dados de sessão (se houver)
+    localStorage.removeItem("user")
+    sessionStorage.clear()
+    
+    // Redirecionar para a página de login
+    window.location.href = "/"
+  }
+
   // Adicionar efeito para detectar mouse na borda esquerda
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -217,7 +226,7 @@ export default function DashboardPage() {
                     <Settings className="h-4 w-4 mr-2" />
                     Configurações
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="h-4 w-4 mr-2" />
                     Sair
                   </DropdownMenuItem>
