@@ -1,49 +1,147 @@
-# Conselho Pronto
+# Conselho Pronto - Sistema de Gestão Educacional
 
-*Sistema de Gestão Educacional desenvolvido com Next.js*
+Sistema completo de gestão educacional desenvolvido para o **Instituto Ivoti**, focado na organização e realização de conselhos de classe e pré-conselhos.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/samueltomm-4540s-projects/v0-website-clone-needed)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/projects/qk26z75r7Mf)
+## 🎯 Objetivo
 
-## Sobre o Projeto
+Resolver a desorganização atual onde os professores analisam notas e informações dos alunos em planilhas. O sistema permite que:
 
-O **Conselho Pronto** é um sistema completo de gestão educacional desenvolvido para facilitar o acompanhamento acadêmico e a realização de conselhos de classe. 
+- **Professores** vejam apenas seus cursos/turmas para avaliar alunos
+- **Administrativo** gerencie permissões e atribuições dos professores
+- **Coordenadores** realizem conselhos de classe organizados
 
-### Funcionalidades Principais
+## 🚀 Funcionalidades Principais
 
-- **Gestão de Alunos**: Cadastro completo com notas, faltas e histórico acadêmico
-- **Controle de Professores**: Sistema de permissões e atribuição de turmas
-- **Organização por Ciclos**: Gestão de anos letivos e trimestres
-- **Cursos e Disciplinas**: Estruturação curricular completa
-- **Relatórios e Dashboards**: Acompanhamento detalhado do desempenho
+### 👨‍🏫 **Área do Professor**
+- Visualização das turmas e disciplinas atribuídas
+- Avaliação de alunos com notas (N1, N2, N3, N4, Recuperação)
+- Registro de faltas (justificadas/não justificadas)
+- Recomendações para conselho (Aprovado/Recuperação/Reprovado)
+- Observações detalhadas sobre cada aluno
 
-### Tecnologias Utilizadas
+### 👨‍💼 **Área Administrativa**
+- Gestão completa de professores
+- Configuração de permissões por professor
+- Atribuição de disciplinas e turmas
+- Controle de acesso ao sistema
+- Gestão de alunos, cursos e turmas
 
-- **Next.js 15** - Framework React para produção
+### 👨‍🎓 **Conselho de Classe**
+- Resumo consolidado de todas as avaliações
+- Decisão final por aluno
+- Relatórios e exportação
+- Observações gerais do conselho
+- Status de aprovação/reprovação/recuperação
+
+## 🔐 Tipos de Usuário
+
+### **Administrador** (`admin@ivoti.edu.br`)
+- Acesso completo ao sistema
+- Gestão de professores e permissões
+- Configurações gerais
+
+### **Professor** (`professor@ivoti.edu.br`)
+- Acesso apenas às suas turmas/disciplinas
+- Avaliação de alunos
+- Registro de notas e faltas
+
+### **Coordenador** (`coordenador@ivoti.edu.br`)
+- Acesso ao conselho de classe
+- Decisões finais sobre alunos
+- Relatórios e exportação
+
+## 🛠️ Tecnologias Utilizadas
+
+- **Next.js 15** - Framework React
 - **TypeScript** - Tipagem estática
-- **Tailwind CSS** - Estilização moderna
-- **Radix UI** - Componentes acessíveis
+- **Tailwind CSS** - Estilização
+- **Shadcn/ui** - Componentes UI
 - **Lucide React** - Ícones
 
-## Deployment
+## 📦 Instalação e Execução
 
-Seu projeto está disponível em:
+```bash
+# Instalar dependências
+npm install
 
-**[https://vercel.com/samueltomm-4540s-projects/v0-website-clone-needed](https://vercel.com/samueltomm-4540s-projects/v0-website-clone-needed)**
+# Executar em desenvolvimento
+npm run dev
 
-## Desenvolvimento
+# Build para produção
+npm run build
 
-Continue desenvolvendo seu app em:
+# Executar produção
+npm start
+```
 
-**[https://v0.app/chat/projects/qk26z75r7Mf](https://v0.app/chat/projects/qk26z75r7Mf)**
+## 🔑 Credenciais de Teste
 
-## Como Funciona
+| Tipo | Email | Senha | Acesso |
+|------|-------|-------|--------|
+| Admin | `admin@ivoti.edu.br` | `123456` | Dashboard completo |
+| Professor | `professor@ivoti.edu.br` | `123456` | Turmas do professor |
+| Coordenador | `coordenador@ivoti.edu.br` | `123456` | Conselho de classe |
 
-1. Crie e modifique seu projeto usando [v0.dev](https://v0.dev)
-2. Faça deploy dos seus chats pela interface do v0
-3. As mudanças são automaticamente enviadas para este repositório
-4. O Vercel faz deploy da versão mais recente deste repositório
+## 📋 Fluxo de Trabalho
+
+### 1. **Configuração Inicial (Admin)**
+- Cadastrar professores
+- Atribuir disciplinas e turmas
+- Configurar permissões
+
+### 2. **Avaliação (Professor)**
+- Acessar turmas atribuídas
+- Lançar notas dos alunos
+- Registrar faltas
+- Fazer recomendações
+
+### 3. **Conselho de Classe (Coordenador)**
+- Revisar todas as avaliações
+- Definir decisão final
+- Gerar relatórios
+
+## 🎨 Interface
+
+- **Design responsivo** para desktop e mobile
+- **Interface intuitiva** com navegação clara
+- **Cores e ícones** que facilitam a identificação
+- **Feedback visual** para ações do usuário
+
+## 📊 Estrutura de Dados
+
+### Aluno
+- Informações pessoais
+- Matrícula e turma
+- Notas por disciplina
+- Faltas e justificativas
+- Status de avaliação
+
+### Professor
+- Dados pessoais
+- Disciplinas atribuídas
+- Turmas responsável
+- Permissões do sistema
+
+### Avaliação
+- Notas (N1, N2, N3, N4)
+- Recuperação
+- Faltas
+- Observações
+- Recomendação
+
+## 🔄 Próximas Funcionalidades
+
+- [ ] Integração com banco de dados
+- [ ] Sistema de notificações
+- [ ] Relatórios em PDF
+- [ ] Backup automático
+- [ ] API REST
+- [ ] App mobile
+
+## 📞 Suporte
+
+Para dúvidas ou sugestões, entre em contato com a equipe de desenvolvimento do Instituto Ivoti.
 
 ---
 
-**Conselho Pronto** - Transformando a gestão educacional com tecnologia moderna.
+**Desenvolvido para o Instituto Ivoti** 🎓

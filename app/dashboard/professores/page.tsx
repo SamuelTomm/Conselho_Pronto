@@ -146,7 +146,9 @@ export default function ProfessoresPage() {
   }
   const [professores, setProfessores] = useState(professoresData)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isPermissoesDialogOpen, setIsPermissoesDialogOpen] = useState(false)
   const [editingProfessor, setEditingProfessor] = useState<any>(null)
+  const [professorPermissoes, setProfessorPermissoes] = useState<any>(null)
   const [formData, setFormData] = useState({
     nome: "",
     email: "",
@@ -272,6 +274,11 @@ export default function ProfessoresPage() {
     resetForm()
     setError("")
     setIsDialogOpen(true)
+  }
+
+  const handleGerenciarPermissoes = (professor: any) => {
+    setProfessorPermissoes(professor)
+    setIsPermissoesDialogOpen(true)
   }
 
   const handleDisciplinaChange = (disciplina: string, checked: boolean) => {
@@ -673,6 +680,10 @@ export default function ProfessoresPage() {
                                 <Edit className="h-4 w-4 mr-2" />
                                 Editar
                               </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleGerenciarPermissoes(professor)}>
+                                <Settings className="h-4 w-4 mr-2" />
+                                Gerenciar Permissões
+                              </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => handleToggleStatus(professor.id)}>
                                 {professor.status === "ativo" ? (
                                   <>
@@ -734,6 +745,164 @@ export default function ProfessoresPage() {
           </Card>
         </main>
       </div>
+
+      {/* Dialog de Gerenciamento de Permissões */}
+      <Dialog open={isPermissoesDialogOpen} onOpenChange={setIsPermissoesDialogOpen}>
+        <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Gerenciar Permissões - {professorPermissoes?.nome}</DialogTitle>
+            <DialogDescription>
+              Configure as permissões, disciplinas e turmas atribuídas ao professor
+            </DialogDescription>
+          </DialogHeader>
+          {professorPermissoes && (
+            <div className="space-y-6">
+              {/* Informações do Professor */}
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <h3 className="font-medium text-blue-900 mb-2">Informações do Professor</h3>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="font-medium">Nome:</span> {professorPermissoes.nome}
+                  </div>
+                  <div>
+                    <span className="font-medium">Email:</span> {professorPermissoes.email}
+                  </div>
+                  <div>
+                    <span className="font-medium">Status:</span>
+                    <Badge className={professorPermissoes.status === "ativo" ? "bg-green-100 text-green-800 ml-2" : "bg-red-100 text-red-800 ml-2"}>
+                      {professorPermissoes.status === "ativo" ? "Ativo" : "Inativo"}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+
+              {/* Disciplinas Atribuídas */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Disciplinas Atribuídas</h3>
+                <div className="grid grid-cols-3 gap-2 max-h-32 overflow-y-auto border rounded p-3">
+                  {disciplinasDisponiveis.map((disciplina) => (
+                    <div key={disciplina} className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id={`perm-disciplina-${disciplina}`}
+                        checked={professorPermissoes.disciplinas.includes(disciplina)}
+                        onChange={(e) => {
+                          const updatedProfessor = { ...professorPermissoes }
+                          if (e.target.checked) {
+                            updatedProfessor.disciplinas = [...updatedProfessor.disciplinas, disciplina]
+                          } else {
+                            updatedProfessor.disciplinas = updatedProfessor.disciplinas.filter((d: string) => d !== disciplina)
+                          }
+                          setProfessorPermissoes(updatedProfessor)
+                        }}
+                        className="rounded"
+                      />
+                      <Label htmlFor={`perm-disciplina-${disciplina}`} className="text-sm">
+                        {disciplina}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Turmas Atribuídas */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Turmas Atribuídas</h3>
+                <div className="grid grid-cols-4 gap-2 max-h-32 overflow-y-auto border rounded p-3">
+                  {turmasDisponiveis.map((turma) => (
+                    <div key={turma} className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id={`perm-turma-${turma}`}
+                        checked={professorPermissoes.turmas.includes(turma)}
+                        onChange={(e) => {
+                          const updatedProfessor = { ...professorPermissoes }
+                          if (e.target.checked) {
+                            updatedProfessor.turmas = [...updatedProfessor.turmas, turma]
+                          } else {
+                            updatedProfessor.turmas = updatedProfessor.turmas.filter((t: string) => t !== turma)
+                          }
+                          setProfessorPermissoes(updatedProfessor)
+                        }}
+                        className="rounded"
+                      />
+                      <Label htmlFor={`perm-turma-${turma}`} className="text-sm">
+                        {turma}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Permissões do Sistema */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Permissões do Sistema</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {Object.entries({
+                    visualizarAlunos: "Visualizar Alunos",
+                    editarAlunos: "Editar Alunos",
+                    visualizarNotas: "Visualizar Notas",
+                    editarNotas: "Editar Notas",
+                    visualizarFaltas: "Visualizar Faltas",
+                    editarFaltas: "Editar Faltas",
+                    gerarRelatorios: "Gerar Relatórios",
+                  }).map(([key, label]) => (
+                    <div key={key} className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id={`perm-${key}`}
+                        checked={professorPermissoes.permissoes[key as keyof typeof professorPermissoes.permissoes]}
+                        onChange={(e) => {
+                          const updatedProfessor = { ...professorPermissoes }
+                          updatedProfessor.permissoes[key as keyof typeof professorPermissoes.permissoes] = e.target.checked
+                          setProfessorPermissoes(updatedProfessor)
+                        }}
+                        className="rounded"
+                      />
+                      <Label htmlFor={`perm-${key}`} className="text-sm">
+                        {label}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Resumo de Atribuições */}
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="font-medium text-gray-900 mb-2">Resumo de Atribuições</h3>
+                <div className="grid grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <span className="font-medium">Disciplinas:</span> {professorPermissoes.disciplinas.length}
+                  </div>
+                  <div>
+                    <span className="font-medium">Turmas:</span> {professorPermissoes.turmas.length}
+                  </div>
+                  <div>
+                    <span className="font-medium">Permissões Ativas:</span> {Object.values(professorPermissoes.permissoes).filter(Boolean).length}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => setIsPermissoesDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button 
+              onClick={() => {
+                // Atualizar o professor com as novas permissões
+                setProfessores(professores.map((prof) => 
+                  prof.id === professorPermissoes.id ? professorPermissoes : prof
+                ))
+                setIsPermissoesDialogOpen(false)
+              }}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              Salvar Permissões
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

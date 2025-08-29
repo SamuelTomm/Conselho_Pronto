@@ -225,8 +225,8 @@ const disciplinasOptions = [
   "Sociologia",
 ]
 
-// Adicionar dados simulados de notas por aluno
-const notasPorAluno = {
+// Dados simulados de notas por aluno
+const notasIniciais = {
   1: [
     {
       disciplina: "Matemática",
@@ -283,8 +283,8 @@ const notasPorAluno = {
   ],
 }
 
-// Adicionar dados simulados de faltas por aluno
-const faltasPorAluno = {
+// Dados simulados de faltas por aluno
+const faltasIniciais = {
   1: [
     { disciplina: "Matemática", data: "2024-03-15", justificada: true, observacoes: "Consulta médica" },
     { disciplina: "História", data: "2024-03-20", justificada: false, observacoes: "" },
@@ -309,6 +309,8 @@ export default function AlunosPage() {
     window.location.href = "/"
   }
   const [alunos, setAlunos] = useState(alunosData)
+  const [notasPorAluno, setNotasPorAluno] = useState(notasIniciais)
+  const [faltasPorAluno, setFaltasPorAluno] = useState(faltasIniciais)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
   const [editingAluno, setEditingAluno] = useState<any>(null)
@@ -330,6 +332,8 @@ export default function AlunosPage() {
   const [error, setError] = useState("")
   const [isNotasDialogOpen, setIsNotasDialogOpen] = useState(false)
   const [selectedAlunoNotas, setSelectedAlunoNotas] = useState<any>(null)
+  const [isAddNotaDialogOpen, setIsAddNotaDialogOpen] = useState(false)
+  const [isAddFaltaDialogOpen, setIsAddFaltaDialogOpen] = useState(false)
   const [notasData, setNotasData] = useState({
     disciplina: "",
     n1: "",
@@ -393,6 +397,96 @@ export default function AlunosPage() {
   const handleViewNotas = (aluno: any) => {
     setSelectedAlunoNotas(aluno)
     setIsNotasDialogOpen(true)
+  }
+
+  // Função para abrir dialog de adicionar nota
+  const handleAddNota = () => {
+    setNotasData({
+      disciplina: "",
+      n1: "",
+      n2: "",
+      n3: "",
+      n4: "",
+      recuperacao: "",
+      observacoes: "",
+    })
+    setIsAddNotaDialogOpen(true)
+  }
+
+  // Função para abrir dialog de adicionar falta
+  const handleAddFalta = () => {
+    setFaltasData({
+      disciplina: "",
+      dataFalta: "",
+      justificada: false,
+      observacoes: "",
+    })
+    setIsAddFaltaDialogOpen(true)
+  }
+
+  // Função para salvar nova nota
+  const handleSaveNota = () => {
+    if (!notasData.disciplina) {
+      setError("Disciplina é obrigatória")
+      return
+    }
+
+    const novaNota = {
+      disciplina: notasData.disciplina,
+      n1: notasData.n1 ? parseFloat(notasData.n1) : null,
+      n2: notasData.n2 ? parseFloat(notasData.n2) : null,
+      n3: notasData.n3 ? parseFloat(notasData.n3) : null,
+      n4: notasData.n4 ? parseFloat(notasData.n4) : null,
+      recuperacao: notasData.recuperacao ? parseFloat(notasData.recuperacao) : null,
+      observacoes: notasData.observacoes,
+    }
+
+    // Calcular média
+    const notas = [novaNota.n1, novaNota.n2, novaNota.n3, novaNota.n4].filter(n => n !== null)
+    if (notas.length > 0) {
+      novaNota.media = notas.reduce((sum, nota) => sum + nota, 0) / notas.length
+    } else {
+      novaNota.media = 0
+    }
+
+    // Adicionar nota ao aluno selecionado
+    if (selectedAlunoNotas) {
+      const alunoId = selectedAlunoNotas.id
+      setNotasPorAluno(prev => ({
+        ...prev,
+        [alunoId]: [...(prev[alunoId] || []), novaNota]
+      }))
+    }
+
+    setIsAddNotaDialogOpen(false)
+    setError("")
+  }
+
+  // Função para salvar nova falta
+  const handleSaveFalta = () => {
+    if (!faltasData.disciplina || !faltasData.dataFalta) {
+      setError("Disciplina e data são obrigatórias")
+      return
+    }
+
+    const novaFalta = {
+      disciplina: faltasData.disciplina,
+      data: faltasData.dataFalta,
+      justificada: faltasData.justificada,
+      observacoes: faltasData.observacoes,
+    }
+
+    // Adicionar falta ao aluno selecionado
+    if (selectedAlunoNotas) {
+      const alunoId = selectedAlunoNotas.id
+      setFaltasPorAluno(prev => ({
+        ...prev,
+        [alunoId]: [...(prev[alunoId] || []), novaFalta]
+      }))
+    }
+
+    setIsAddFaltaDialogOpen(false)
+    setError("")
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -1017,7 +1111,7 @@ export default function AlunosPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-medium">Notas por Disciplina</h3>
-                  <Button size="sm" className="bg-teal-600 hover:bg-teal-700">
+                  <Button size="sm" className="bg-teal-600 hover:bg-teal-700" onClick={handleAddNota}>
                     <Plus className="h-4 w-4 mr-2" />
                     Adicionar Nota
                   </Button>
@@ -1087,7 +1181,7 @@ export default function AlunosPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-medium">Registro de Faltas</h3>
-                  <Button size="sm" variant="outline">
+                  <Button size="sm" variant="outline" onClick={handleAddFalta}>
                     <Plus className="h-4 w-4 mr-2" />
                     Registrar Falta
                   </Button>
@@ -1204,6 +1298,209 @@ export default function AlunosPage() {
               Gerar Relatório
             </Button>
           </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog para Adicionar Nota */}
+      <Dialog open={isAddNotaDialogOpen} onOpenChange={setIsAddNotaDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Adicionar Nota - {selectedAlunoNotas?.nome}</DialogTitle>
+            <DialogDescription>
+              Adicione as notas do aluno para a disciplina selecionada
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={(e) => { e.preventDefault(); handleSaveNota(); }}>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="disciplina">Disciplina</Label>
+                <Select value={notasData.disciplina} onValueChange={(value) => setNotasData({...notasData, disciplina: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a disciplina" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {disciplinasOptions.map((disciplina) => (
+                      <SelectItem key={disciplina} value={disciplina}>
+                        {disciplina}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="n1">Nota 1</Label>
+                  <Input
+                    id="n1"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="10"
+                    value={notasData.n1}
+                    onChange={(e) => setNotasData({...notasData, n1: e.target.value})}
+                    placeholder="0.0"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="n2">Nota 2</Label>
+                  <Input
+                    id="n2"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="10"
+                    value={notasData.n2}
+                    onChange={(e) => setNotasData({...notasData, n2: e.target.value})}
+                    placeholder="0.0"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="n3">Nota 3</Label>
+                  <Input
+                    id="n3"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="10"
+                    value={notasData.n3}
+                    onChange={(e) => setNotasData({...notasData, n3: e.target.value})}
+                    placeholder="0.0"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="n4">Nota 4</Label>
+                  <Input
+                    id="n4"
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="10"
+                    value={notasData.n4}
+                    onChange={(e) => setNotasData({...notasData, n4: e.target.value})}
+                    placeholder="0.0"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="recuperacao">Recuperação</Label>
+                <Input
+                  id="recuperacao"
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  max="10"
+                  value={notasData.recuperacao}
+                  onChange={(e) => setNotasData({...notasData, recuperacao: e.target.value})}
+                  placeholder="0.0"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="observacoes">Observações</Label>
+                <Textarea
+                  id="observacoes"
+                  value={notasData.observacoes}
+                  onChange={(e) => setNotasData({...notasData, observacoes: e.target.value})}
+                  placeholder="Observações sobre as notas..."
+                  rows={3}
+                />
+              </div>
+            </div>
+            {error && (
+              <Alert variant="destructive" className="mt-4">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            <DialogFooter className="mt-6">
+              <Button type="button" variant="outline" onClick={() => setIsAddNotaDialogOpen(false)}>
+                Cancelar
+              </Button>
+              <Button type="submit" className="bg-teal-600 hover:bg-teal-700">
+                Salvar Nota
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog para Adicionar Falta */}
+      <Dialog open={isAddFaltaDialogOpen} onOpenChange={setIsAddFaltaDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Registrar Falta - {selectedAlunoNotas?.nome}</DialogTitle>
+            <DialogDescription>
+              Registre uma falta para o aluno
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={(e) => { e.preventDefault(); handleSaveFalta(); }}>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="falta-disciplina">Disciplina</Label>
+                <Select value={faltasData.disciplina} onValueChange={(value) => setFaltasData({...faltasData, disciplina: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a disciplina" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {disciplinasOptions.map((disciplina) => (
+                      <SelectItem key={disciplina} value={disciplina}>
+                        {disciplina}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="dataFalta">Data da Falta</Label>
+                <Input
+                  id="dataFalta"
+                  type="date"
+                  value={faltasData.dataFalta}
+                  onChange={(e) => setFaltasData({...faltasData, dataFalta: e.target.value})}
+                />
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="justificada"
+                  checked={faltasData.justificada}
+                  onChange={(e) => setFaltasData({...faltasData, justificada: e.target.checked})}
+                  className="rounded"
+                />
+                <Label htmlFor="justificada">Falta Justificada</Label>
+              </div>
+
+              <div>
+                <Label htmlFor="falta-observacoes">Observações</Label>
+                <Textarea
+                  id="falta-observacoes"
+                  value={faltasData.observacoes}
+                  onChange={(e) => setFaltasData({...faltasData, observacoes: e.target.value})}
+                  placeholder="Observações sobre a falta..."
+                  rows={3}
+                />
+              </div>
+            </div>
+            {error && (
+              <Alert variant="destructive" className="mt-4">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            <DialogFooter className="mt-6">
+              <Button type="button" variant="outline" onClick={() => setIsAddFaltaDialogOpen(false)}>
+                Cancelar
+              </Button>
+              <Button type="submit" variant="outline">
+                Registrar Falta
+              </Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
 

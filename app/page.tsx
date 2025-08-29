@@ -20,10 +20,23 @@ export default function LoginPage() {
     setIsLoading(true)
     setError("")
 
-    // Simulação de login
+    // Simulação de login com diferentes tipos de usuário
     setTimeout(() => {
-      if (email === "professor@gmail.com" && password === "123456") {
+      if (email === "admin@ivoti.edu.br" && password === "123456") {
+        // Administrador - vai para dashboard principal
+        localStorage.setItem("userType", "admin")
+        localStorage.setItem("userName", "Administrador")
         window.location.href = "/dashboard"
+      } else if (email === "professor@ivoti.edu.br" && password === "123456") {
+        // Professor - vai para página de turmas
+        localStorage.setItem("userType", "professor")
+        localStorage.setItem("userName", "Prof. Maria Silva")
+        window.location.href = "/dashboard/professor-turmas"
+      } else if (email === "coordenador@ivoti.edu.br" && password === "123456") {
+        // Coordenador - vai para conselho de classe
+        localStorage.setItem("userType", "coordenador")
+        localStorage.setItem("userName", "Coordenador")
+        window.location.href = "/dashboard/conselho-classe"
       } else {
         setError("Usuário ou senha incorretos. Verifique suas credenciais.")
       }
@@ -88,6 +101,14 @@ export default function LoginPage() {
               Acesse sua Conta
             </CardTitle>
               <p className="text-blue-600 text-sm">Entre com suas credenciais para continuar</p>
+              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
+                <p className="text-xs text-blue-700 font-medium mb-2">Credenciais de Teste:</p>
+                <div className="text-xs text-blue-600 space-y-1">
+                  <div><strong>Admin:</strong> admin@ivoti.edu.br / 123456</div>
+                  <div><strong>Professor:</strong> professor@ivoti.edu.br / 123456</div>
+                  <div><strong>Coordenador:</strong> coordenador@ivoti.edu.br / 123456</div>
+                </div>
+              </div>
             </CardHeader>
             <CardContent className="px-6 pb-4">
                               <form onSubmit={handleLogin} className="space-y-3">
